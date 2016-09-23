@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.420,C:\@source\GitHub\fumigator\Server\TelpinAPI.pas=C:\@source\GitHub\fumigator\Server\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.874,=C:\@source\GitHub\fumigator\Server\TelpinRingMeAPI.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.828,=C:\@source\GitHub\fumigator\Server\TelpinTeleoAPI.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.614,C:\@source\GitHub\fumigator\Server\TelpinTeleoAPI.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.942,C:\@source\GitHub\fumigator\Server\TelpinRingMeAPI.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.051,E:\@Git\fumigator\Server\CommonFunc.pas=E:\@Git\fumigator\Server\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.658,=E:\@Git\fumigator\Server\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.228,=C:\@source\GitHub\fumigator\Server\TelpinRingMeAPI.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.595,=C:\@source\GitHub\fumigator\Server\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>
