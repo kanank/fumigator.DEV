@@ -131,8 +131,14 @@ begin
       begin
         Q.FieldByName('RESULT').AsString := edtResult.Text;
         Q.FieldByName('ISHOD').AsString  := edtIshod.Text;
-        Q.Post;
-
+        try
+          Q.Post;
+          if Q.Transaction.Active then
+            Q.Transaction.CommitRetaining;
+        except
+          if Q.Transaction.Active then
+            Q.Transaction.RollbackRetaining;
+        end;
         Self.ModalResult := mrOk;
       end;
    end

@@ -67,6 +67,7 @@ end;
 
 destructor TframeClientCalls.Destroy;
 begin
+  fPlay.Parent := nil;
   fPlay.Free;
   inherited;
 end;

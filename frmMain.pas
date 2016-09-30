@@ -83,6 +83,7 @@ type
     mExceptList: TPopupMenu;
     btnReports: TRzMenuButton;
     lblCall: TRzLabel;
+    TimerCheck: TTimer;
 
     procedure btnWorkersClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -110,9 +111,11 @@ type
     procedure TCPClientDisconnected(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnReportsClick(Sender: TObject);
+    procedure TimerCheckTimer(Sender: TObject);
   private
     fCanClose: Boolean; // можно закрыть
     fPhoneListUpdated: Boolean;
+    FisServerCmd: boolean; //нет ответа от сервера
     procedure WmShowMsg(var Msg: TMessage); message WM_SHOWMSG;
     procedure WmShowIncomeCall(var Msg: TMessage); message WM_SHOWINCOMECALL;
     procedure WmShowOutcomeCall(var Msg: TMessage); message WM_SHOWOUTCOMECALL;
@@ -121,9 +124,13 @@ type
     procedure WmCmdFumigator(var Msg: TMessage); message WM_CMDFUMIGATOR;
 
     procedure UpdateClients;
+
+    procedure SetConnectCaption;
+    procedure SetIsServerCmd(AValue: Boolean);
   public
     ReadThread: TReadingThread;
     isBusy: Boolean; //выполняются обновления
+    property IsServerCmd: Boolean read FisServerCmd write SetIsServerCmd;
 
     procedure DoSocketConnect;
     procedure AppException(Sender: TObject; E: Exception);
@@ -162,7 +169,7 @@ uses
   formIncomeCallRoot, System.DateUtils, formClientResult,
   CommonVars, CommonFunc, formWorkerShedule, formCallReport,
   formRecordPlay, formCallUnknown, formSessionResult,
-  formListActivePhones;
+  formListActivePhones, commonSocketCmd;
 
 procedure TfrmMain.btnTuneClick(Sender: TObject);
 begin
@@ -315,7 +322,7 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   inherited;
-  Title := 'Пользователь - ' + DM.CurrentUserSets.UserName +
+  Title := 'ѕользователь - ' + DM.CurrentUserSets.UserName +
     ' (' + DM.CurrentUserSets.UserTypeName + ')' + ' [вер.: ' + FileVersion(Application.ExeName) + ']';
   DoSocketConnect;
   CallObj.OnStartCall := OnCallStart;
@@ -432,7 +439,7 @@ begin
 
   if i = 20 then
   begin
-    MsgBoxError('Не удалось получить список абонентов с сервера!');
+    MsgBoxError('Ќе удалось получить список абонентов с сервера!');
     Exit;
   end;
 
@@ -472,18 +479,50 @@ begin
   FreeAndNil(frmSessions);
 end;
 
+procedure TfrmMain.SetConnectCaption;
+var
+  s: string;
+begin
+  if not TCPClient.Connected then
+    s := '—оединение с сервером не установлено'
+  else
+  begin
+    s := '—оединение с сервером установлено';
+    if not FisServerCmd then
+      s := '—оединение с сервером ограничено(!!!)'
+  end;
+  lblSocket.Caption := s;
+end;
+
+procedure TfrmMain.SetIsServerCmd(AValue: Boolean);
+begin
+  if AValue <> FisServerCmd then
+  begin
+    FisServerCmd := AValue;
+    SetConnectCaption;
+  end;
+end;
+
 procedure TfrmMain.TCPClientConnected(Sender: TObject);
 begin
   DM.SocketTimer.Interval := 0;
   ReadThread := TReadingThread.Create(TCPClient);
 
-  lblSocket.Caption := '—оединение с сервером установлено';
+
   DM.DateStart := Now;
   TCPClient.IOHandler.DefStringEncoding := IndyTextEncoding_UTF8;
-  //TCPClient.Socket.WriteLn(Format('#setphone:%s,%d',
-  //  [DM.CurrentUserSets.ATS_Phone_Num, DM.CurrentUserSets.ID])); //посылаем номер телефона
-  TCPClient.Socket.WriteLn(Format('#setphone:%s',
-    [DM.CurrentUserSets.ATS_Phone_Num]));
+  TCPClient.Socket.WriteLn(Format('#setphone:%s,%d,%s',
+    [DM.CurrentUserSets.ATS_Phone_Num,
+     DM.CurrentUserSets.ID,
+     FileVersion(Application.ExeName)
+{$IFDEF DEBUG}
+     + '.DEV'
+{$ENDIF}
+     ])); //посылаем номер телефона
+
+  //TCPClient.Socket.WriteLn(Format('#setphone:%s',
+  //  [DM.CurrentUserSets.ATS_Phone_Num]));
+  TimerCheck.Enabled := True;
 end;
 
 procedure TfrmMain.TCPClientDisconnected(Sender: TObject);
@@ -495,6 +534,13 @@ begin
     FreeAndNil(ReadThread);
   end;
    lblSocket.Caption := '—оединение с сервером не установлено'
+end;
+
+procedure TfrmMain.TimerCheckTimer(Sender: TObject);
+begin
+  TimerCheck.Enabled := False;
+  if not isServerCmd then
+    MsgBoxWarning('Ќе получен ответ от сервера. ¬озможны проблемы со звонками');
 end;
 
 procedure TfrmMain.DoSocketConnect;
@@ -771,6 +817,9 @@ var
 begin
   s := FMsg;
 
+  if s <> '' then
+    formMain.isServerCmd := True;
+
   if Copy(s, 1, 1) = '#' then
   begin
     p := Pos(':', s);
@@ -928,6 +977,7 @@ begin
   else
   if cmd = 'servertime' then
   begin
+    formMain.isServerCmd := True;
     TimeShift := StrToInt(arg) - SecondOfTheDay(DM.DateStart);
     DM.DateStart := IncSecond(DM.DateStart, TimeShift);
     DM.CallS_Q.ParamByName('date_start').AsDateTime := DM.DateStart;
@@ -994,6 +1044,15 @@ begin
   finally
     formMain.fPhoneListUpdated := True;
     argList.Free;
+  end
+
+  else
+  if cmd = SCMD_NEEDUPDATE then  //необходимо обновление программы
+  try
+    msgText := 'Ќеобходимо обновление программы до версии: ' + arg;
+    PostMessage(formMain.Handle, WM_SHOWMSG, 0,0);
+    Application.ProcessMessages;
+  finally
   end
 
 end;

@@ -1,7 +1,7 @@
 object MF: TMF
   Left = 0
   Top = 0
-  Caption = #1057#1077#1088#1074#1077#1088' "'#1060#1091#1084#1080#1075#1072#1090#1086#1088'" v.0.01b'
+  Caption = 'DEV '#1057#1077#1088#1074#1077#1088' "'#1060#1091#1084#1080#1075#1072#1090#1086#1088'" v.0.01b'
   ClientHeight = 583
   ClientWidth = 627
   Color = clBtnFace
@@ -70,15 +70,15 @@ object MF: TMF
     Align = alTop
     BevelKind = bkFlat
     TabOrder = 2
-    object PageControl1: TPageControl
+    object PgMain: TPageControl
       Left = 1
       Top = 1
       Width = 621
       Height = 363
-      ActivePage = TabSheet1
+      ActivePage = TabMain
       Align = alClient
       TabOrder = 0
-      object TabSheet1: TTabSheet
+      object TabMain: TTabSheet
         Caption = #1054#1089#1085#1086#1074#1085#1099#1077
         object GroupBox1: TGroupBox
           Left = 0
@@ -135,7 +135,7 @@ object MF: TMF
             MinValue = 0
             ParentFont = False
             TabOrder = 1
-            Value = 1025
+            Value = 1026
           end
           object Edit1: TEdit
             Left = 154
@@ -312,7 +312,7 @@ object MF: TMF
             MinValue = 0
             ParentFont = False
             TabOrder = 1
-            Value = 45455
+            Value = 45456
           end
           object TelIP_edt: TEdit
             Left = 34
@@ -472,7 +472,7 @@ object MF: TMF
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            Text = '81.177.48.139:C:\Projects\Fumigator\Db\fumigator.fdb'
+            Text = '81.177.48.139:C:\Projects\Fumigator\Db\fumigator_dev.fdb'
           end
           object DBUser_edt: TEdit
             Left = 69
@@ -525,12 +525,19 @@ object MF: TMF
           end
         end
       end
-      object TabSheet2: TTabSheet
+      object TabPhones: TTabSheet
         Caption = #1058#1077#1083#1077#1092#1086#1085#1099
         ImageIndex = 1
+        object Label13: TLabel
+          Left = 3
+          Top = 3
+          Width = 37
+          Height = 13
+          Caption = #1053#1086#1084#1077#1088#1072
+        end
         object lstPhones: TcxListBox
-          Left = 24
-          Top = 56
+          Left = 3
+          Top = 16
           Width = 57
           Height = 137
           ItemHeight = 13
@@ -545,6 +552,43 @@ object MF: TMF
             '755'
             '757')
           TabOrder = 0
+        end
+      end
+      object TabVersion: TTabSheet
+        Caption = #1042#1077#1088#1089#1080#1080
+        ImageIndex = 2
+        DesignSize = (
+          613
+          335)
+        object Label14: TLabel
+          Left = 3
+          Top = 10
+          Width = 87
+          Height = 13
+          Caption = #1056#1072#1073#1086#1095#1072#1103' '#1074#1077#1088#1089#1080#1103': '
+        end
+        object edtVersion: TEdit
+          Left = 91
+          Top = 6
+          Width = 126
+          Height = 21
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          TabOrder = 0
+        end
+        object btnVersion: TButton
+          Left = 218
+          Top = 4
+          Width = 106
+          Height = 25
+          Anchors = [akTop, akRight]
+          Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+          TabOrder = 1
+          OnClick = btnVersionClick
         end
       end
     end
@@ -569,7 +613,7 @@ object MF: TMF
   end
   object DB: TIBDatabase
     Connected = True
-    DatabaseName = '81.177.48.139:C:\Projects\Fumigator\Db\fumigator.fdb'
+    DatabaseName = '81.177.48.139:C:\Projects\Fumigator\Db\fumigator_dev.fdb'
     Params.Strings = (
       'user_name=SYSDBA'
       'password=masterkey')

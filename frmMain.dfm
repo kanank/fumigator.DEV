@@ -19,9 +19,9 @@ inherited frmMain: TfrmMain
     ExplicitHeight = 81
   end
   object lblSocket: TLabel
-    Left = 407
+    Left = 435
     Top = 0
-    Width = 231
+    Width = 203
     Height = 13
     Alignment = taRightJustify
     Caption = #1057#1086#1077#1076#1080#1085#1077#1085#1080#1077' '#1089' '#1089#1077#1088#1074#1077#1088#1086#1084' '#1085#1077' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
@@ -294,5 +294,12 @@ inherited frmMain: TfrmMain
   object mExceptList: TPopupMenu
     Left = 384
     Top = 56
+  end
+  object TimerCheck: TTimer
+    Enabled = False
+    Interval = 2000
+    OnTimer = TimerCheckTimer
+    Left = 456
+    Top = 136
   end
 end

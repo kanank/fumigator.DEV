@@ -728,10 +728,11 @@ begin
       try
       frmClientResult.ShowModal;
       Result := frmClientResult.CallResult;
-      frmClientResult.frmCli.Parent := nil;
-      if Assigned(frmClientResult) and
-          Assigned(frmSessionResult) then
-        frmSessionResult.Parent := nil;
+      
+      //frmClientResult.frmCli.Parent := nil;
+      //if Assigned(frmClientResult) and
+      //    Assigned(frmSessionResult) then
+      //  frmSessionResult.Parent := nil;
 
       finally
       end;

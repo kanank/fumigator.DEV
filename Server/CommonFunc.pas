@@ -6,6 +6,7 @@ uses
    Windows;
 
 function FileVersion ( fName : string ) : string;
+procedure DecodeVersion(const AVersion: string; var Major, Minor, Release, Build: integer);
 function UrlEncode(Str: Ansistring): Ansistring;
 function UrlDecode(Str: Ansistring): Ansistring;
 function LockMutex(AHandle: THandle; ATimeout: integer): Boolean;
@@ -247,6 +248,25 @@ begin
   end;
   if Result <> -1 then Result := FS.Size;
   FS.Free;
+end;
+
+procedure DecodeVersion(const AVersion: string; var Major, Minor, Release, Build: integer);
+var
+  list: TStringList;
+begin
+  Major := 0; Minor := 0; Release := 0; Build := 0;
+  list := TStringList.Create;
+  list.Delimiter := '.';
+  list.DelimitedText := AVersion;
+
+  try
+    Major   := StrToInt(list[0]);
+    Minor   := StrToInt(list[1]);
+    Release := StrToInt(list[2]);
+    Build   := StrToInt(list[3]);
+  finally
+
+  end;
 end;
 
 end.

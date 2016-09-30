@@ -1,11 +1,12 @@
-program Fumigator_srv;
+program FumigatorSrv_dev;
 
 uses
   Vcl.Forms,
   Srr_MF in 'Srr_MF.pas' {MF},
   TelpinAPI in 'TelpinAPI.pas',
   CommonFunc in 'CommonFunc.pas',
-  TelpinRingMeAPI in 'TelpinRingMeAPI.pas';
+  TelpinRingMeAPI in 'TelpinRingMeAPI.pas',
+  commonSocketCmd in '..\commonSocketCmd.pas';
 
 {$R *.res}
 

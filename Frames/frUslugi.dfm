@@ -131,7 +131,7 @@ inherited FrameUslugi: TFrameUslugi
   inherited Query: TIBQuery
     SQL.Strings = (
       'select * from  services_client where client_id = :client_id')
-    GeneratorField.Generator = 'GEN_CLIENT_SERVICES_ID'
+    GeneratorField.Generator = 'GEN_SERVICES_CLIENT_ID'
     GeneratorField.ApplyEvent = gamOnPost
     ParamData = <
       item

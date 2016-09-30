@@ -118,6 +118,7 @@ type
       Nick: String;
       UserId: Integer;
       Con: TDateTime;
+      Version: string;
       function SendMsg(const ANick: String; const AMsg: String) : Boolean;
       procedure BroadcastMsg(const bmsg: String);
       procedure BroadcastMsgAll(const ANick: String; const bmsg: String);
@@ -135,9 +136,9 @@ type
     RzSelDirDialog1: TRzSelDirDialog;
     LogText: TATBinHex;
     Panel1: TPanel;
-    PageControl1: TPageControl;
-    TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
+    PgMain: TPageControl;
+    TabMain: TTabSheet;
+    TabPhones: TTabSheet;
     GroupBox1: TGroupBox;
     Label2: TLabel;
     Label9: TLabel;
@@ -178,6 +179,11 @@ type
     Button7: TButton;
     lstPhones: TcxListBox;
     Button5: TButton;
+    Label13: TLabel;
+    TabVersion: TTabSheet;
+    edtVersion: TEdit;
+    Label14: TLabel;
+    btnVersion: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Tel_SRVCommandGet(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -198,6 +204,7 @@ type
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
     procedure QPhonesBeforeOpen(DataSet: TDataSet);
+    procedure btnVersionClick(Sender: TObject);
   private
     fSessions: TStringList;
 
@@ -241,6 +248,8 @@ type
     procedure WriteLog(s: string);
     procedure AppException(Sender: TObject; E: Exception);
     function GetUserList(Exclude: string): string; //список подключенных пользователей
+    function GetActiveContext: string; //список подключенных пользователей
+    procedure CheckContextVersion(AContext: TMyContext);
 
   end;
 
@@ -259,7 +268,7 @@ implementation
 
 {$R *.dfm}
 uses
-  System.DateUtils, CommonFunc, System.StrUtils;
+  System.DateUtils, CommonFunc, System.StrUtils, commonSocketCmd;
 
 
 procedure TMF.AddLog(Logstr: string; ALock: Boolean=true);
@@ -351,6 +360,7 @@ begin
       Context := TMyContext(List[I]);
       try
         Context.Connection.IOHandler.WriteLn(bmsg);
+        CheckContextVersion(Context);
       except
          AddLogMemo('Ошибка отправки сообщения: ' +
           Context.Nick + ': ' + bmsg + #13#10 +
@@ -369,6 +379,11 @@ begin
   AtsUserPrefix := Trim(edtUserId.Text) + '*';
   AccessToken.GetToken;
   AddLogMemo('Получен токен доступа');
+end;
+
+procedure TMF.btnVersionClick(Sender: TObject);
+begin
+  edtVersion.Text := FileVersion(ExtractFilePath(Application.ExeName) + 'fumigator.exe');
 end;
 
 procedure TMF.Button1Click(Sender: TObject);
@@ -457,8 +472,17 @@ begin
 end;
 
 procedure TMF.Button8Click(Sender: TObject);
+var
+  s: string;
 begin
-  ShowMessage('Кол-во соединений: ' + IntToStr(TCPServer.Contexts.Count));
+  s := 'Кол-во соединений: ' +  IntToStr(TCPServer.Contexts.Count);
+
+  if TCPServer.Contexts.Count > 0 then
+    s := s + #13#10 +
+         '--------------------' + #13#10 +
+         GetActiveContext;
+
+  ShowMessage(s);
 end;
 
 procedure TMF.Button9Click(Sender: TObject);
@@ -470,6 +494,25 @@ procedure TMF.CallFinished(Sender: TObject);
 begin
   //UpdateSession(TCallListener(Sender).CallId);
   //SendCommandToUser(TCallListener(Sender).Extension, '#callfinish:' + TCallListener(Sender).CallApiId);
+end;
+
+procedure TMF.CheckContextVersion(AContext: TMyContext);
+var
+  v1, v2, v3, v4, v01, v02, v03, v04: Integer;
+begin
+  if (AContext.Version <> '') and
+     (Pos('.DEV',AContext.Version) = 0) and
+     (edtVersion.Text <> '') and
+     (AContext.Version <> edtVersion.Text) then
+  begin
+    DecodeVersion(edtVersion.Text, v01, v02, v03, v04);
+    DecodeVersion(AContext.Version, v1, v2, v3, v4);
+    if (v01 - v1 < 0) or
+       (v02 - v2 < 0) or
+       (v03 - v3 < 0) or
+       (v04 - v4 < 0) then
+       AContext.Connection.IOHandler.WriteLn(Format(GetSocketCmdSrv(SCMD_NEEDUPDATE), [edtVersion.Text]));
+  end;
 end;
 
 function TMF.CreateRWQuery: TIBQuery;
@@ -616,6 +659,8 @@ begin
 
   LogText.Open(LogName, True);
   LogText.PosPercent := 100;
+
+  btnVersion.Click; //обновляем версию
 end;
 
 procedure TMF.FormDestroy(Sender: TObject);
@@ -867,6 +912,28 @@ begin
   end;
 end;
 
+function TMF.GetActiveContext: string;
+var
+  List: TList;
+  Context: TMyContext;
+  I, ind: Integer;
+begin
+  Result := '';
+
+  List := TCPServer.Contexts.LockList;
+  try
+    for I := 0 to List.Count-1 do
+    begin
+      Context := TMyContext(List[I]);
+      Result := Result + Format('%s | %s',
+       [Context.Nick, Context.Version]);
+    end;
+
+  finally
+    TCPServer.Contexts.UnlockList;
+  end;
+end;
+
 function TMF.SendCommandToUser(atsnum, command: string; ALock: Boolean=true): Boolean;
 var
   i, p: Integer;
@@ -951,6 +1018,7 @@ begin
         try
           Context.Connection.IOHandler.WriteLn(AMsg);
           Result := True;
+          CheckContextVersion(Context);
         except
           Context.Connection.IOHandler.Close;
            Exit;
@@ -1130,8 +1198,11 @@ begin
         TMyContext(AContext).Nick := arglist[0];
         if arglist.Count > 1 then
           TMyContext(AContext).UserId := StrToInt(arglist[1]);
+        if arglist.Count > 2 then
+          TMyContext(AContext).Version := arglist[2];
         try
           AContext.Connection.IOHandler.WriteLn('#servertime:' + IntToStr(SecondOfTheDay(Now)));
+          CheckContextVersion(TMyContext(AContext));
         except
           try AContext.Connection.IOHandler.Close; except end;
           AddLogMemo('#Ошибка записи: ' +Exception(ExceptObject).Message);
