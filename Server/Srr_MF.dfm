@@ -1,7 +1,7 @@
 object MF: TMF
   Left = 0
   Top = 0
-  Caption = 'DEV '#1057#1077#1088#1074#1077#1088' "'#1060#1091#1084#1080#1075#1072#1090#1086#1088'" v.0.01b'
+  Caption = #1057#1077#1088#1074#1077#1088' "'#1060#1091#1084#1080#1075#1072#1090#1086#1088'" v.0.01b'
   ClientHeight = 583
   ClientWidth = 627
   Color = clBtnFace
@@ -135,7 +135,7 @@ object MF: TMF
             MinValue = 0
             ParentFont = False
             TabOrder = 1
-            Value = 1026
+            Value = 1025
           end
           object Edit1: TEdit
             Left = 154
@@ -312,7 +312,7 @@ object MF: TMF
             MinValue = 0
             ParentFont = False
             TabOrder = 1
-            Value = 45456
+            Value = 45455
           end
           object TelIP_edt: TEdit
             Left = 34
@@ -472,7 +472,7 @@ object MF: TMF
             Font.Style = []
             ParentFont = False
             TabOrder = 1
-            Text = '81.177.48.139:C:\Projects\Fumigator\Db\fumigator_dev.fdb'
+            Text = '81.177.48.139:C:\Projects\Fumigator\Db\fumigator.fdb'
           end
           object DBUser_edt: TEdit
             Left = 69
@@ -528,6 +528,10 @@ object MF: TMF
       object TabPhones: TTabSheet
         Caption = #1058#1077#1083#1077#1092#1086#1085#1099
         ImageIndex = 1
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Label13: TLabel
           Left = 3
           Top = 3
@@ -557,6 +561,10 @@ object MF: TMF
       object TabVersion: TTabSheet
         Caption = #1042#1077#1088#1089#1080#1080
         ImageIndex = 2
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         DesignSize = (
           613
           335)
@@ -613,7 +621,7 @@ object MF: TMF
   end
   object DB: TIBDatabase
     Connected = True
-    DatabaseName = '81.177.48.139:C:\Projects\Fumigator\Db\fumigator_dev.fdb'
+    DatabaseName = '81.177.48.139:C:\Projects\Fumigator\Db\fumigator.fdb'
     Params.Strings = (
       'user_name=SYSDBA'
       'password=masterkey')
@@ -749,6 +757,7 @@ object MF: TMF
       'CLIENTS_CHANGED'
       'INCOME_CALL'
       'PHONES_CHANGED'
+      'RIGHTS_CHANGED'
       'SESSION_CLOSE'
       'SESSION_OPEN')
     Registered = False

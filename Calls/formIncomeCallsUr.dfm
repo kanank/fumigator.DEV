@@ -2,7 +2,6 @@ inherited frmIncomeCallUr: TfrmIncomeCallUr
   Caption = #1042#1093#1086#1076#1103#1097#1080#1081' '#1079#1074#1086#1085#1086#1082'. '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   ClientHeight = 343
   ClientWidth = 887
-  ExplicitLeft = -169
   ExplicitWidth = 903
   ExplicitHeight = 381
   PixelsPerInch = 96
@@ -35,16 +34,13 @@ inherited frmIncomeCallUr: TfrmIncomeCallUr
     ExplicitTop = 292
     ExplicitWidth = 887
     inherited Image2: TImage
-      Left = 0
-      Top = 2
-      Height = 47
       Margins.Left = 8
       Margins.Top = 8
       Margins.Right = 8
       Margins.Bottom = 8
-      Align = alLeft
       ExplicitLeft = 11
       ExplicitTop = 2
+      ExplicitHeight = 47
     end
     inherited Exit_bnt: TRzButton
       Left = 416
@@ -54,6 +50,10 @@ inherited frmIncomeCallUr: TfrmIncomeCallUr
       Margins.Right = 8
       Margins.Bottom = 8
       ExplicitLeft = 416
+      ExplicitTop = 3
+    end
+    inherited btnTransferCall: TRzButton
+      Top = 3
       ExplicitTop = 3
     end
     inherited btnTransfer: TRzButton
@@ -321,7 +321,6 @@ inherited frmIncomeCallUr: TfrmIncomeCallUr
       Margins.Bottom = 6
       TabOrder = 0
       ExplicitTop = 97
-      ExplicitHeight = 26
     end
     inherited cmbStatus: TcxLookupComboBox
       Top = 136
@@ -331,7 +330,6 @@ inherited frmIncomeCallUr: TfrmIncomeCallUr
       Margins.Bottom = 6
       TabOrder = 1
       ExplicitTop = 136
-      ExplicitHeight = 26
     end
     inherited lblWorker: TcxLabel
       Left = 138
@@ -374,7 +372,6 @@ inherited frmIncomeCallUr: TfrmIncomeCallUr
     Margins.Bottom = 6
     Style.IsFontAssigned = True
     ExplicitLeft = 688
-    ExplicitHeight = 26
   end
   object edtPersonName: TcxDBTextEdit [5]
     Left = 564

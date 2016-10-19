@@ -10,12 +10,12 @@ inherited FrameKladrAdrFull: TFrameKladrAdrFull
   object Label8: TLabel [0]
     Left = 3
     Top = 6
-    Width = 40
-    Height = 16
+    Width = 46
+    Height = 18
     Caption = #1056#1077#1075#1080#1086#1085
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
-    Font.Height = -13
+    Font.Height = -15
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
@@ -23,12 +23,12 @@ inherited FrameKladrAdrFull: TFrameKladrAdrFull
   object Label1: TLabel [1]
     Left = 3
     Top = 31
-    Width = 61
-    Height = 16
+    Width = 74
+    Height = 18
     Caption = #1053#1072#1089'. '#1087#1091#1085#1082#1090
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
-    Font.Height = -13
+    Font.Height = -15
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
@@ -36,12 +36,12 @@ inherited FrameKladrAdrFull: TFrameKladrAdrFull
   object Label2: TLabel [2]
     Left = 3
     Top = 56
-    Width = 35
-    Height = 16
+    Width = 40
+    Height = 18
     Caption = #1040#1076#1088#1077#1089
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
-    Font.Height = -13
+    Font.Height = -15
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
@@ -49,22 +49,52 @@ inherited FrameKladrAdrFull: TFrameKladrAdrFull
   inherited FrameRegion: TFrameItemKLADR
     Top = 76
     ExplicitTop = 76
+    inherited edtName: TcxTextEdit
+      ExplicitHeight = 26
+    end
+    inherited edtSocr: TcxTextEdit
+      ExplicitHeight = 26
+    end
   end
   inherited FrameCity: TFrameItemKLADR
     Top = 109
     ExplicitTop = 109
+    inherited edtName: TcxTextEdit
+      ExplicitHeight = 26
+    end
+    inherited edtSocr: TcxTextEdit
+      ExplicitHeight = 26
+    end
   end
   inherited FrameSite: TFrameItemKLADR
     Top = 134
     ExplicitTop = 134
+    inherited edtName: TcxTextEdit
+      ExplicitHeight = 26
+    end
+    inherited edtSocr: TcxTextEdit
+      ExplicitHeight = 26
+    end
   end
   inherited FrameStreet: TFrameItemKLADR
     Top = 159
     ExplicitTop = 159
+    inherited edtName: TcxTextEdit
+      ExplicitHeight = 26
+    end
+    inherited edtSocr: TcxTextEdit
+      ExplicitHeight = 26
+    end
   end
   inherited FrameArea: TFrameItemKLADR
     Top = 83
     ExplicitTop = 83
+    inherited edtName: TcxTextEdit
+      ExplicitHeight = 26
+    end
+    inherited edtSocr: TcxTextEdit
+      ExplicitHeight = 26
+    end
   end
   object btnEdit: TRzBitBtn [9]
     Left = 353
@@ -81,7 +111,7 @@ inherited FrameKladrAdrFull: TFrameKladrAdrFull
     Spacing = 1
   end
   object edtRegion: TcxTextEdit [10]
-    Left = 64
+    Left = 83
     Top = 3
     ParentFont = False
     Properties.ReadOnly = True
@@ -92,10 +122,10 @@ inherited FrameKladrAdrFull: TFrameKladrAdrFull
     Style.Font.Style = []
     Style.IsFontAssigned = True
     TabOrder = 7
-    Width = 287
+    Width = 268
   end
   object edtSite: TcxTextEdit [11]
-    Left = 64
+    Left = 83
     Top = 28
     ParentFont = False
     Properties.ReadOnly = True
@@ -106,10 +136,10 @@ inherited FrameKladrAdrFull: TFrameKladrAdrFull
     Style.Font.Style = []
     Style.IsFontAssigned = True
     TabOrder = 8
-    Width = 287
+    Width = 268
   end
   object edtAddress: TcxTextEdit [12]
-    Left = 65
+    Left = 83
     Top = 53
     ParentFont = False
     Properties.ReadOnly = True
@@ -120,11 +150,24 @@ inherited FrameKladrAdrFull: TFrameKladrAdrFull
     Style.Font.Style = []
     Style.IsFontAssigned = True
     TabOrder = 9
-    Width = 287
+    Width = 269
   end
   inherited FrameDom: TFrameItemDomKLADR
     Top = 186
     ExplicitTop = 186
+    inherited edtName: TcxTextEdit
+      ExplicitHeight = 26
+    end
+    inherited edtSocr: TcxTextEdit
+      ExplicitHeight = 26
+    end
+    inherited cmbName: TcxComboBox
+      ExplicitHeight = 26
+    end
+  end
+  inherited edtKvartira: TcxTextEdit
+    Style.IsFontAssigned = True
+    ExplicitHeight = 26
   end
   inherited Query_upd: TIBUpdateSQL
     Top = 114

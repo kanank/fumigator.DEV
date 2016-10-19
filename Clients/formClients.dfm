@@ -4,6 +4,8 @@ inherited frmClients: TfrmClients
   ClientWidth = 1277
   Position = poDesktopCenter
   OnShow = FormShow
+  ExplicitLeft = -372
+  ExplicitTop = -120
   ExplicitWidth = 1293
   ExplicitHeight = 640
   PixelsPerInch = 96
@@ -122,6 +124,15 @@ inherited frmClients: TfrmClients
       ThemeAware = False
       OnClick = btnAllClick
     end
+    object chkDeleted: TcxCheckBox
+      Left = 448
+      Top = 7
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1079#1072#1087#1080#1089#1080
+      Properties.Alignment = taRightJustify
+      TabOrder = 3
+      OnClick = chkDeletedClick
+      Width = 220
+    end
   end
   inherited RzPanel1: TRzPanel
     Top = 534
@@ -146,6 +157,7 @@ inherited frmClients: TfrmClients
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
+      Visible = False
       OnClick = Edit_btnClick
     end
     inherited Del_btn: TRzButton
@@ -166,8 +178,8 @@ inherited frmClients: TfrmClients
       ExplicitTop = 7
     end
     object RzButton1: TRzButton
-      Left = 744
-      Top = 11
+      Left = 212
+      Top = 10
       Width = 167
       Height = 40
       Margins.Left = 4
@@ -212,7 +224,27 @@ inherited frmClients: TfrmClients
       Margin = 3
       Spacing = 6
       DropDownMenu = NewClientBtn_PUM
-      ShowArrow = False
+    end
+    object Edit_btn_mnu: TRzMenuButton
+      Left = 212
+      Top = 9
+      Width = 167
+      Height = 42
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      HotTrack = True
+      HotTrackColor = 16625984
+      LightTextStyle = True
+      ParentFont = False
+      TabOrder = 6
+      ThemeAware = False
+      OnClick = Edit_btnClick
+      Layout = blGlyphRight
+      DropDownMenu = mnuEdit
     end
   end
   inherited Grid: TcxGrid
@@ -231,6 +263,8 @@ inherited frmClients: TfrmClients
     inherited GridView: TcxGridDBTableView
       OnCellClick = GridViewCellClick
       OnCellDblClick = GridViewUrCellDblClick
+      OnCustomDrawCell = GridViewCustomDrawCell
+      OnFocusedRecordChanged = GridViewFocusedRecordChanged
       DataController.DataSource = DS
       OptionsBehavior.IncSearch = True
       OptionsBehavior.IncSearchItem = GridViewColumn2
@@ -271,7 +305,7 @@ inherited frmClients: TfrmClients
         Caption = #1058#1077#1083#1077#1092#1086#1085
         DataBinding.FieldName = 'PHONE'
         HeaderAlignmentHorz = taCenter
-        Width = 144
+        Width = 126
       end
       object GridViewColumn5: TcxGridDBColumn
         Caption = #1054#1090#1074'. '#1089#1086#1090#1088#1091#1076#1085#1080#1082
@@ -279,7 +313,7 @@ inherited frmClients: TfrmClients
         HeaderAlignmentHorz = taCenter
         Options.GroupFooters = False
         Options.Grouping = False
-        Width = 184
+        Width = 121
       end
       object GridViewColumn4: TcxGridDBColumn
         DataBinding.FieldName = 'Email'
@@ -298,11 +332,23 @@ inherited frmClients: TfrmClients
         DataBinding.FieldName = 'CNT_DOG'
         HeaderAlignmentHorz = taCenter
       end
+      object GridViewColumn9: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+        DataBinding.FieldName = 'DATE_CREATE'
+        HeaderAlignmentHorz = taCenter
+        Width = 82
+      end
+      object GridViewColumn10: TcxGridDBColumn
+        DataBinding.FieldName = 'act'
+        Visible = False
+      end
     end
     object GridViewUr: TcxGridDBTableView [1]
       Navigator.Buttons.CustomButtons = <>
       OnCellClick = GridViewCellClick
       OnCellDblClick = GridViewUrCellDblClick
+      OnCustomDrawCell = GridViewUrCustomDrawCell
+      OnFocusedRecordChanged = GridViewUrFocusedRecordChanged
       DataController.DataSource = DS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -350,13 +396,13 @@ inherited frmClients: TfrmClients
         HeaderAlignmentHorz = taCenter
         Options.GroupFooters = False
         Options.Grouping = False
-        Width = 236
+        Width = 191
       end
       object GridViewUrColumn3: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085
         DataBinding.FieldName = 'PHONE'
         HeaderAlignmentHorz = taCenter
-        Width = 192
+        Width = 148
       end
       object GridViewUrColumn4: TcxGridDBColumn
         DataBinding.FieldName = 'Email'
@@ -375,11 +421,25 @@ inherited frmClients: TfrmClients
         DataBinding.FieldName = 'CNT_DOG'
         HeaderAlignmentHorz = taCenter
       end
+      object GridViewUrColumn9: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+        DataBinding.FieldName = 'DATE_CREATE'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'dd.mm.yy'
+        HeaderAlignmentHorz = taCenter
+        Width = 80
+      end
+      object GridViewUrColumn10: TcxGridDBColumn
+        DataBinding.FieldName = 'act'
+        Visible = False
+      end
     end
     object GridViewAll: TcxGridDBTableView [2]
       Navigator.Buttons.CustomButtons = <>
       OnCellClick = GridViewCellClick
       OnCellDblClick = GridViewUrCellDblClick
+      OnCustomDrawCell = GridViewAllCustomDrawCell
+      OnFocusedRecordChanged = GridViewAllFocusedRecordChanged
       DataController.DataSource = DS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -437,7 +497,7 @@ inherited frmClients: TfrmClients
         DataBinding.FieldName = 'WORKER_NAME'
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
-        Width = 174
+        Width = 150
       end
       object GridViewAllColumn7: TcxGridDBColumn
         Caption = #1058#1077#1083#1077#1092#1086#1085
@@ -451,18 +511,27 @@ inherited frmClients: TfrmClients
         DataBinding.FieldName = 'email'
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
-        Width = 155
+        Width = 101
       end
       object GridViewAllColumn9: TcxGridDBColumn
         DataBinding.FieldName = #1050#1086#1083'-'#1074#1086' '#1074#1099#1087'. '#1079#1072#1103#1074#1086#1082
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Styles.Header = cxStyle1
+        Width = 80
+      end
+      object GridViewAllColumn10: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+        DataBinding.FieldName = 'DATE_CREATE'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'dd.mm.yy'
+        HeaderAlignmentHorz = taCenter
         Width = 76
       end
-    end
-    inherited GridLevel1: TcxGridLevel
-      GridView = GridViewAll
+      object GridViewAllColumn11: TcxGridDBColumn
+        DataBinding.FieldName = 'act'
+        Visible = False
+      end
     end
   end
   object btnCli: TRzButton
@@ -529,7 +598,6 @@ inherited frmClients: TfrmClients
     Margins.Right = 4
     Margins.Bottom = 4
     GroupIndex = 1
-    Down = True
     FrameColor = clGray
     ShowDownPattern = False
     Caption = #1055#1086#1089#1090#1086#1103#1085#1085#1099#1077' '#1082#1083#1080#1077#1085#1090#1099
@@ -754,5 +822,17 @@ inherited frmClients: TfrmClients
     StorageName = 'fumigator.prop'
     Left = 376
     Top = 104
+  end
+  object mnuEdit: TPopupMenu
+    Left = 616
+    Top = 520
+    object miEditCli: TMenuItem
+      Caption = #1050#1083#1080#1077#1085#1090#1072
+      OnClick = miEditCliClick
+    end
+    object miChangeTypeCli: TMenuItem
+      Caption = #1058#1080#1087' '#1082#1083#1080#1077#1085#1090#1072
+      OnClick = miChangeTypeCliClick
+    end
   end
 end

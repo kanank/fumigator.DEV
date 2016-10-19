@@ -7,8 +7,6 @@ inherited frmSessionEdit: TfrmSessionEdit
   Caption = #1057#1077#1089#1089#1080#1103' ['#1088#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077']'
   Position = poDesktopCenter
   OnShow = FormShow
-  ExplicitLeft = -326
-  ExplicitTop = -11
   ExplicitWidth = 1043
   ExplicitHeight = 639
   PixelsPerInch = 96
@@ -95,188 +93,208 @@ inherited frmSessionEdit: TfrmSessionEdit
       OnClick = btnClientEditClick
     end
   end
-  object pnlResult: TRzPanel
+  object ScrollBox: TScrollBox
     Left = 0
     Top = 0
     Width = 1027
-    Height = 226
-    Margins.Left = 4
-    Margins.Top = 4
-    Margins.Right = 4
-    Margins.Bottom = 4
-    Align = alTop
-    BorderOuter = fsFlat
-    BorderSides = [sdBottom]
+    Height = 550
+    Align = alClient
+    AutoScroll = False
+    AutoSize = True
+    BevelInner = bvNone
     TabOrder = 1
-  end
-  object pnlCalls: TRzPanel
-    Left = 0
-    Top = 300
-    Width = 1027
-    Height = 250
-    Margins.Left = 4
-    Margins.Top = 4
-    Margins.Right = 4
-    Margins.Bottom = 4
-    Align = alBottom
-    BorderOuter = fsNone
-    TabOrder = 2
-    inline frameClientCalls: TframeClientCalls
-      Left = -3
-      Top = 0
-      Width = 1059
-      Height = 263
+    ExplicitWidth = 1029
+    ExplicitHeight = 545
+    DesignSize = (
+      1023
+      546)
+    object pnlCalls: TRzPanel
+      Left = 0
+      Top = 328
+      Width = 1025
+      Height = 213
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
       Margins.Bottom = 4
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -15
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
+      BorderOuter = fsNone
       TabOrder = 0
-      ExplicitLeft = -3
-      ExplicitWidth = 1059
-      ExplicitHeight = 263
-      inherited grpPhone: TRzGroupBox
-        Width = 1058
-        Height = 256
+      inline frameClientCalls: TframeClientCalls
+        Left = -3
+        Top = 0
+        Width = 1059
+        Height = 209
         Margins.Left = 4
         Margins.Top = 4
         Margins.Right = 4
         Margins.Bottom = 4
-        ExplicitWidth = 1058
-        ExplicitHeight = 256
-        inherited RzPanel2: TRzPanel
-          Left = 1015
-          Width = 42
-          Height = 236
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -15
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+        ExplicitLeft = -3
+        ExplicitWidth = 1059
+        ExplicitHeight = 209
+        inherited grpPhone: TRzGroupBox
+          Top = 10
+          Width = 1058
+          Height = 209
           Margins.Left = 4
           Margins.Top = 4
           Margins.Right = 4
           Margins.Bottom = 4
-          ExplicitLeft = 1015
-          ExplicitWidth = 42
-          ExplicitHeight = 236
-          inherited btnAdd: TRzBitBtn
-            Left = 3
-            Top = 91
-            Width = 39
-            Height = 39
+          ExplicitTop = 10
+          ExplicitWidth = 1058
+          ExplicitHeight = 209
+          inherited RzPanel2: TRzPanel
+            Left = 1015
+            Width = 42
+            Height = 189
             Margins.Left = 4
             Margins.Top = 4
             Margins.Right = 4
             Margins.Bottom = 4
-            Margin = 3
-            Spacing = 6
-            ExplicitLeft = 3
-            ExplicitTop = 91
-            ExplicitWidth = 39
-            ExplicitHeight = 39
+            ExplicitLeft = 1015
+            ExplicitWidth = 42
+            ExplicitHeight = 189
+            inherited btnAdd: TRzBitBtn
+              Left = 3
+              Top = 85
+              Width = 39
+              Height = 39
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
+              Margin = 3
+              Spacing = 6
+              ExplicitLeft = 3
+              ExplicitTop = 85
+              ExplicitWidth = 39
+              ExplicitHeight = 39
+            end
+            inherited btnEdit: TRzBitBtn
+              Left = 3
+              Top = 119
+              Width = 39
+              Height = 38
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
+              Margin = 3
+              Spacing = 6
+              ExplicitLeft = 3
+              ExplicitTop = 119
+              ExplicitWidth = 39
+              ExplicitHeight = 38
+            end
+            inherited btnDel: TRzBitBtn
+              Left = 3
+              Top = 160
+              Width = 39
+              Height = 39
+              Margins.Left = 4
+              Margins.Top = 4
+              Margins.Right = 4
+              Margins.Bottom = 4
+              Margin = 3
+              Spacing = 6
+              ExplicitLeft = 3
+              ExplicitTop = 160
+              ExplicitWidth = 39
+              ExplicitHeight = 39
+            end
           end
-          inherited btnEdit: TRzBitBtn
-            Left = 3
-            Top = 139
-            Width = 39
-            Height = 38
+          inherited grdPhone: TcxGrid
+            Left = 7
+            Top = 24
+            Width = 1052
+            Height = 191
             Margins.Left = 4
             Margins.Top = 4
             Margins.Right = 4
             Margins.Bottom = 4
-            Margin = 3
-            Spacing = 6
-            ExplicitLeft = 3
-            ExplicitTop = 139
-            ExplicitWidth = 39
-            ExplicitHeight = 38
+            Font.Height = -15
+            ExplicitLeft = 7
+            ExplicitTop = 24
+            ExplicitWidth = 1052
+            ExplicitHeight = 191
+            inherited GridView: TcxGridDBTableView
+              inherited GridViewColumn1: TcxGridDBColumn
+                Width = 93
+              end
+              inherited GridViewColumn6: TcxGridDBColumn
+                Width = 106
+              end
+              inherited GridViewColumn7: TcxGridDBColumn
+                Width = 164
+              end
+              inherited GridViewColumn9: TcxGridDBColumn
+                Width = 209
+              end
+              inherited GridViewColumn10: TcxGridDBColumn
+                Width = 195
+              end
+              inherited GridViewColumn11: TcxGridDBColumn
+                IsCaptionAssigned = True
+              end
+              inherited ColumnRecord: TcxGridDBColumn
+                Width = 148
+              end
+            end
           end
-          inherited btnDel: TRzBitBtn
-            Left = 3
-            Top = 195
-            Width = 39
-            Height = 39
+          inherited pnlForm: TPanel
+            Left = 710
+            Top = 66
+            Width = 190
+            Height = 35
             Margins.Left = 4
             Margins.Top = 4
             Margins.Right = 4
             Margins.Bottom = 4
-            Margin = 3
-            Spacing = 6
-            ExplicitLeft = 3
-            ExplicitTop = 195
-            ExplicitWidth = 39
-            ExplicitHeight = 39
+            ExplicitLeft = 710
+            ExplicitTop = 66
+            ExplicitWidth = 190
+            ExplicitHeight = 35
           end
-        end
-        inherited grdPhone: TcxGrid
-          Left = 7
-          Top = 24
-          Width = 1049
-          Height = 227
-          Margins.Left = 4
-          Margins.Top = 4
-          Margins.Right = 4
-          Margins.Bottom = 4
-          Font.Height = -15
-          ExplicitLeft = 7
-          ExplicitTop = 24
-          ExplicitWidth = 1049
-          ExplicitHeight = 227
-          inherited GridView: TcxGridDBTableView
-            inherited GridViewColumn1: TcxGridDBColumn
-              Width = 93
-            end
-            inherited GridViewColumn6: TcxGridDBColumn
-              Width = 106
-            end
-            inherited GridViewColumn7: TcxGridDBColumn
-              Width = 164
-            end
-            inherited GridViewColumn9: TcxGridDBColumn
-              Width = 209
-            end
-            inherited GridViewColumn10: TcxGridDBColumn
-              Width = 195
-            end
-            inherited GridViewColumn11: TcxGridDBColumn
-              IsCaptionAssigned = True
-            end
-            inherited ColumnRecord: TcxGridDBColumn
-              Width = 148
-            end
-          end
-        end
-        inherited pnlForm: TPanel
-          Left = 710
-          Top = 66
-          Width = 190
-          Height = 35
-          Margins.Left = 4
-          Margins.Top = 4
-          Margins.Right = 4
-          Margins.Bottom = 4
-          ExplicitLeft = 710
-          ExplicitTop = 66
-          ExplicitWidth = 190
-          ExplicitHeight = 35
         end
       end
     end
-  end
-  object pnlClient: TRzPanel
-    Left = 0
-    Top = 226
-    Width = 1027
-    Height = 74
-    Margins.Left = 4
-    Margins.Top = 4
-    Margins.Right = 4
-    Margins.Bottom = 4
-    Align = alClient
-    AutoSize = True
-    BorderOuter = fsFlat
-    BorderSides = [sdBottom]
-    TabOrder = 3
+    object pnlClient: TRzPanel
+      Left = 0
+      Top = 224
+      Width = 1021
+      Height = 117
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Anchors = [akLeft, akTop, akRight]
+      AutoSize = True
+      BorderOuter = fsFlat
+      BorderSides = [sdBottom]
+      TabOrder = 1
+      ExplicitWidth = 1023
+    end
+    object pnlResult: TRzPanel
+      Left = 0
+      Top = 0
+      Width = 1023
+      Height = 226
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alTop
+      BorderOuter = fsFlat
+      BorderSides = [sdBottom]
+      TabOrder = 2
+      ExplicitLeft = -32
+      ExplicitTop = -72
+    end
   end
 end

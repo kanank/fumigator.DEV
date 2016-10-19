@@ -1,4 +1,4 @@
-program FumigatorSrv_dev;
+program Fumigator_srv;
 
 uses
   Vcl.Forms,

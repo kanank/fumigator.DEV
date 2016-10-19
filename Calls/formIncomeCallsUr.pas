@@ -44,6 +44,7 @@ type
   protected
     procedure doAcceptCall; override;
     procedure doFinishCall; override;
+    procedure Setcontrols; override;
   public
     { Public declarations }
   end;
@@ -90,6 +91,11 @@ procedure TfrmIncomeCallUr.FormCreate(Sender: TObject);
 begin
   inherited;
     fCanClose := false;
+end;
+
+procedure TfrmIncomeCallUr.Setcontrols;
+begin
+  Exit_bnt.Enabled := UserRights.WorkClientCard;
 end;
 
 end.

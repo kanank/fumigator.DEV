@@ -37,6 +37,8 @@ type
     Label4: TLabel;
   private
     { Private declarations }
+  protected
+   procedure SetControls; override;
   public
     { Public declarations }
   end;
@@ -47,5 +49,14 @@ var
 implementation
 
 {$R *.dfm}
+uses
+  DM_Main;
+
+{ TfrmSmallCard }
+
+procedure TfrmSmallCard.SetControls;
+begin
+  RzBitBtn1.Enabled := UserRights.WorkClientCard;
+end;
 
 end.

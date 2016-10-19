@@ -6,6 +6,8 @@ object frmLogo: TfrmLogo
   ClientHeight = 156
   ClientWidth = 294
   Color = clBtnFace
+  TransparentColor = True
+  TransparentColorValue = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -23,11 +25,13 @@ object frmLogo: TfrmLogo
     Top = 0
     Width = 294
     Height = 156
-    Brush.Style = bsClear
+    Align = alClient
+    Brush.Color = clCream
+    Shape = stRoundRect
   end
   object img1: TImage
     Left = 10
-    Top = -15
+    Top = -22
     Width = 272
     Height = 146
     Anchors = []
@@ -162,7 +166,7 @@ object frmLogo: TfrmLogo
   end
   object Info: TRzLabel
     Left = 4
-    Top = 115
+    Top = 99
     Width = 287
     Height = 16
     Alignment = taCenter
@@ -175,7 +179,10 @@ object frmLogo: TfrmLogo
     Font.Style = [fsBold]
     GlowSize = 1
     ParentFont = False
+    Transparent = True
     BlinkColor = clGreen
+    BlinkIntervalOff = 1000
+    BlinkIntervalOn = 1000
     BorderSides = []
     FlyByColor = clGreen
     FlyByEnabled = True
@@ -184,7 +191,7 @@ object frmLogo: TfrmLogo
   end
   object ProgressBar: TcxProgressBar
     Left = 1
-    Top = 134
+    Top = 118
     Anchors = [akLeft, akRight, akBottom]
     AutoSize = False
     ParentFont = False

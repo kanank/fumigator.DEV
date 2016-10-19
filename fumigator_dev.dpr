@@ -1,4 +1,4 @@
-program fumigator;
+program fumigator_dev;
 
 uses
   Vcl.Forms,
@@ -61,7 +61,6 @@ uses
   formIncomeCallRoot in 'Calls\formIncomeCallRoot.pas' {frmIncomeCallRoot},
   formClientResult in 'Clients\formClientResult.pas' {frmClientResult},
   formCallEvent in 'Calls\formCallEvent.pas' {frmCallEvent},
-  CommonFunc in 'Server\CommonFunc.pas',
   formSessionEdit in 'Calls\formSessionEdit.pas' {frmSessionEdit},
   frClientCalls in 'Frames\frClientCalls.pas' {frameClientCalls: TFrame},
   frContact in 'Frames\frContact.pas' {FrameContact: TFrame},
@@ -77,7 +76,9 @@ uses
   ClassFormSmallCard in 'Classes\ClassFormSmallCard.pas' {frmSmallCard},
   formSmallClientFiz in 'Clients\formSmallClientFiz.pas' {frmSmallCardFiz},
   formSmallClientUr in 'Clients\formSmallClientUr.pas' {frmSmallCardUr},
-  formListActivePhones in 'Calls\formListActivePhones.pas' {frmListActivePhones};
+  formListActivePhones in 'Calls\formListActivePhones.pas' {frmListActivePhones},
+  CallClasses in 'Classes\CallClasses.pas',
+  CommonFunc in 'Server\CommonFunc.pas';
 
 {$R *.res}
 var
@@ -87,7 +88,7 @@ begin
   Application.Title := 'Фумигатор';
 
   try
-    if CheckStartRepeat(CheckAppName) then  //проверяем повторный запуск
+    if CheckStartRepeat(CheckAppName, FindParam('RESTART')) then  //проверяем повторный запуск
     begin
       UnlockMutex(hMutex);
       Application.Terminate;
@@ -141,5 +142,6 @@ begin
     Application.Run;
   except
     err := Exception(ExceptObject).Message;
+    MsgBoxError('Непредвиденная ошибка программы: ' + err);
   end;
 end.

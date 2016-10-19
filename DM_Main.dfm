@@ -1,6 +1,5 @@
 object DataModuleMain: TDataModuleMain
   OldCreateOrder = False
-  OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 536
   Width = 816
@@ -14,6 +13,7 @@ object DataModuleMain: TDataModuleMain
     DefaultTransaction = DefTr
     ServerType = 'IBServer'
     AllowStreamedConnected = False
+    AfterDisconnect = DBAfterDisconnect
     Left = 24
     Top = 24
   end
@@ -79,7 +79,7 @@ object DataModuleMain: TDataModuleMain
       
         'select w.*, p.family, p.name, p.surname, p.prof_id profession_id' +
         ','
-      'is_deleted, '
+      'is_deleted, USER_TYPE_DEF,'
       '(select first 1 phone from phones '
       'where w.person_id = client_id and "TYPE"=1 and ismain=1) phone'
       'from workers w'
@@ -120,7 +120,8 @@ object DataModuleMain: TDataModuleMain
       #9'USER_PASSWORD = :USER_PASSWORD,'
       #9'USER_TYPE = :USER_TYPE,'
       #9'USER_BLOCKED = :USER_BLOCKED,'
-      #9'ATS_NUM  = :ATS_NUM'
+      #9'ATS_NUM  = :ATS_NUM,'
+      #9'USER_TYPE_DEF = :USER_TYPE_DEF'
       'where id = :ID')
     InsertSQL.Strings = (
       'INSERT INTO WORKERS ('
@@ -136,7 +137,8 @@ object DataModuleMain: TDataModuleMain
       #9'USER_TYPE,'
       #9'USER_BLOCKED,'
       #9'ATS_NUM,'
-      #9'WORKER_ID)'
+      #9'WORKER_ID,'
+      #9'USER_TYPE_DEF)'
       'Values('
       #9':ID,'
       '    '#9':PERSON_ID,'
@@ -150,7 +152,8 @@ object DataModuleMain: TDataModuleMain
       #9':USER_TYPE,'
       #9':USER_BLOCKED,'
       #9':ATS_NUM,'
-      #9':WORKER_ID)'#9)
+      #9':WORKER_ID,'
+      #9':USER_TYPE_DEF)'#9)
     DeleteSQL.Strings = (
       'update workers'
       'set IS_DELETED = 1'
@@ -896,8 +899,6 @@ object DataModuleMain: TDataModuleMain
   object Clients: TIBQuery
     Database = DB
     Transaction = Clients_tr
-    ForcedRefresh = True
-    ObjectView = True
     FieldOptions.UpdatePersistent = True
     AfterOpen = ClientsAfterOpen
     AfterPost = ClientsAfterPost
@@ -997,8 +998,7 @@ object DataModuleMain: TDataModuleMain
   end
   object DsClients: TDataSource
     AutoEdit = False
-    DataSet = Clients
-    OnDataChange = DsWorkerDataChange
+    DataSet = ClientList0
     Left = 333
     Top = 24
   end
@@ -1638,7 +1638,7 @@ object DataModuleMain: TDataModuleMain
     CachedUpdates = True
     ParamCheck = True
     SQL.Strings = (
-      'select *  from Dic_Area_Volume')
+      'select *  from Dic_Area_Volume order by ord')
     UpdateObject = DicAreaVolume_upd
     GeneratorField.Field = 'ID'
     GeneratorField.Generator = 'GEN_DIC_AREA_VOLUME_ID'
@@ -1748,7 +1748,9 @@ object DataModuleMain: TDataModuleMain
     Left = 376
     Top = 80
     object IntegerField1: TIntegerField
+      FieldKind = fkLookup
       FieldName = 'ID'
+      Lookup = True
     end
     object StringField1: TStringField
       FieldName = 'NAME'
@@ -1777,6 +1779,18 @@ object DataModuleMain: TDataModuleMain
       Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
+    end
+  end
+  object ClientList0: TdxMemData
+    Indexes = <>
+    SortOptions = []
+    Left = 327
+    Top = 80
+    object IntegerField2: TIntegerField
+      FieldName = 'ID'
+    end
+    object StringField2: TStringField
+      FieldName = 'NAME'
     end
   end
 end

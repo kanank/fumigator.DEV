@@ -23,7 +23,7 @@ uses
   dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
   dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  frClientCalls, frBank, CommonTypes;
+  frClientCalls, frBank, CommonTypes, cxCalendar;
 
 type
   TfrmClientUr = class(TSimpleForm)
@@ -65,6 +65,8 @@ type
     cxDBMemo1: TcxDBMemo;
     frameClientCalls: TframeClientCalls;
     btnHide: TRzButton;
+    cmbDate: TcxDBDateEdit;
+    Label7: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure butOKClick(Sender: TObject);
     procedure DSDataChange(Sender: TObject; Field: TField);

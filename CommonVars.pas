@@ -2,7 +2,7 @@ unit CommonVars;
 
 interface
 uses
-  CommonTypes;
+  CommonTypes, CallClasses;
 
 const
   FormAlphaBlend :byte = 100;
@@ -16,8 +16,8 @@ var
   InitBirthYear: integer = 30;
 
   ServerHost: string  = '81.177.48.139'; //'localhost';  // 'localhost';  //''81.177.48.139'; //;
-  ServerPort: integer = 1026;
-  ServerHttpPort: integer = 45456;
+  ServerPort: integer = 1025;
+  ServerHttpPort: integer = 45455;
 
   CallObj:  TCallProto;
   CallInfo: TCallInfo;

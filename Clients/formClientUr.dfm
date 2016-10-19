@@ -5,6 +5,8 @@ inherited frmClientUr: TfrmClientUr
   Position = poDesktopCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  ExplicitLeft = -158
+  ExplicitTop = -288
   ExplicitWidth = 1079
   ExplicitHeight = 784
   PixelsPerInch = 96
@@ -22,7 +24,7 @@ inherited frmClientUr: TfrmClientUr
   end
   object Label5: TLabel [1]
     Left = 693
-    Top = 487
+    Top = 480
     Width = 113
     Height = 36
     Margins.Left = 4
@@ -55,7 +57,24 @@ inherited frmClientUr: TfrmClientUr
     Font.Style = []
     ParentFont = False
   end
-  inline FrameClientExtUr: TFrameClientExtUr [3]
+  object Label7: TLabel [3]
+    Left = 696
+    Top = 522
+    Width = 101
+    Height = 18
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
+    Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  inline FrameClientExtUr: TFrameClientExtUr [4]
     Left = 14
     Top = 99
     Width = 679
@@ -390,6 +409,9 @@ inherited frmClientUr: TfrmClientUr
       OnClick = Exit_bntClick
       ExplicitLeft = 884
       ExplicitTop = 3
+    end
+    inherited btnTransferCall: TRzButton
+      TabOrder = 3
     end
     object butOK: TRzButton
       Left = 692
@@ -821,47 +843,32 @@ inherited frmClientUr: TfrmClientUr
     inherited Label8: TLabel
       Left = 4
       Top = 7
-      Width = 46
-      Height = 18
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
       Margins.Bottom = 4
-      Font.Height = -15
       ExplicitLeft = 4
       ExplicitTop = 7
-      ExplicitWidth = 46
-      ExplicitHeight = 18
     end
     inherited Label1: TLabel
       Left = 4
       Top = 34
-      Width = 74
-      Height = 18
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
       Margins.Bottom = 4
-      Font.Height = -15
       ExplicitLeft = 4
       ExplicitTop = 34
-      ExplicitWidth = 74
-      ExplicitHeight = 18
     end
     inherited Label2: TLabel
       Left = 4
       Top = 61
-      Width = 40
-      Height = 18
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
       Margins.Bottom = 4
-      Font.Height = -15
       ExplicitLeft = 4
       ExplicitTop = 61
-      ExplicitWidth = 40
-      ExplicitHeight = 18
     end
     inherited lblName: TLabel
       Left = 320
@@ -929,7 +936,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 141
         ExplicitTop = 4
         ExplicitWidth = 276
-        ExplicitHeight = 26
         Width = 276
       end
       inherited edtSocr: TcxTextEdit
@@ -942,7 +948,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 93
         ExplicitTop = 4
         ExplicitWidth = 45
-        ExplicitHeight = 26
         Width = 45
       end
     end
@@ -997,7 +1002,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 141
         ExplicitTop = 4
         ExplicitWidth = 276
-        ExplicitHeight = 26
         Width = 276
       end
       inherited edtSocr: TcxTextEdit
@@ -1010,7 +1014,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 93
         ExplicitTop = 4
         ExplicitWidth = 45
-        ExplicitHeight = 26
         Width = 45
       end
     end
@@ -1065,7 +1068,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 141
         ExplicitTop = 4
         ExplicitWidth = 276
-        ExplicitHeight = 26
         Width = 276
       end
       inherited edtSocr: TcxTextEdit
@@ -1078,7 +1080,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 93
         ExplicitTop = 4
         ExplicitWidth = 45
-        ExplicitHeight = 26
         Width = 45
       end
     end
@@ -1133,7 +1134,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 141
         ExplicitTop = 4
         ExplicitWidth = 276
-        ExplicitHeight = 26
         Width = 276
       end
       inherited edtSocr: TcxTextEdit
@@ -1146,7 +1146,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 93
         ExplicitTop = 4
         ExplicitWidth = 45
-        ExplicitHeight = 26
         Width = 45
       end
     end
@@ -1201,7 +1200,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 141
         ExplicitTop = 4
         ExplicitWidth = 276
-        ExplicitHeight = 26
         Width = 276
       end
       inherited edtSocr: TcxTextEdit
@@ -1214,7 +1212,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 93
         ExplicitTop = 4
         ExplicitWidth = 45
-        ExplicitHeight = 26
         Width = 45
       end
     end
@@ -1330,7 +1327,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 141
         ExplicitTop = 4
         ExplicitWidth = 111
-        ExplicitHeight = 26
         Width = 111
       end
       inherited edtSocr: TcxTextEdit
@@ -1343,7 +1339,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 93
         ExplicitTop = 4
         ExplicitWidth = 45
-        ExplicitHeight = 26
         Width = 45
       end
       inherited cmbName: TcxComboBox
@@ -1356,7 +1351,6 @@ inherited frmClientUr: TfrmClientUr
         ExplicitLeft = 141
         ExplicitTop = 6
         ExplicitWidth = 111
-        ExplicitHeight = 26
         Width = 111
       end
     end
@@ -1371,7 +1365,6 @@ inherited frmClientUr: TfrmClientUr
       ExplicitLeft = 400
       ExplicitTop = 184
       ExplicitWidth = 60
-      ExplicitHeight = 26
       Width = 60
     end
     inherited Query: TIBQuery
@@ -1500,7 +1493,7 @@ inherited frmClientUr: TfrmClientUr
   end
   object cmbWorker: TcxDBLookupComboBox
     Left = 816
-    Top = 491
+    Top = 484
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
@@ -2141,6 +2134,20 @@ inherited frmClientUr: TfrmClientUr
         end
       end
     end
+  end
+  object cmbDate: TcxDBDateEdit
+    Left = 816
+    Top = 519
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
+    DataBinding.DataField = 'DATE_CREATE'
+    DataBinding.DataSource = DS
+    Properties.DisplayFormat = 'dd.mm.yyyy'
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 150
   end
   object DS: TDataSource
     OnDataChange = DSDataChange

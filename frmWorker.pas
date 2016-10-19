@@ -54,6 +54,8 @@ type
     cxDBTextEdit3: TcxDBTextEdit;
     DS: TDataSource;
     FrameRegions: TFrameWorkerRegions;
+    Label4: TLabel;
+    cmbUserType: TcxDBLookupComboBox;
     procedure FullForm_btnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Save_btnClick(Sender: TObject);
@@ -62,6 +64,8 @@ type
     procedure _FramePersonFullcmbDateBirthPropertiesInitPopup(Sender: TObject);
   private
     { Private declarations }
+  protected
+   procedure SetControls; override;
   public
     { Public declarations }
   end;
@@ -129,7 +133,7 @@ begin
       begin
         Title := Title + ' [просмотр]';
 
-        Short_tab.TabVisible := True;
+        Short_tab.TabVisible := Short_tab.Enabled;
         RzPageControl1.ActivePage := Short_Tab;
         FullForm_btn.Visible := True;
         self.Constraints.MaxHeight := _FramePersonSmall.Height + 20 + RzPanel1.Height;
@@ -174,7 +178,7 @@ begin
 
   RzPageControl1.ActivePage := Full_Tab;
   Short_Tab.TabVisible := False;
-  Full_Tab.TabVisible  := True;
+  Full_Tab.TabVisible  := Full_Tab.Enabled;
   FullForm_btn.Visible := False;
 end;
 
@@ -242,6 +246,12 @@ begin
       if TIBQuery(DS.DataSet).Transaction.InTransaction then
            TIBQuery(DS.DataSet).Transaction.RollbackRetaining;
   end;
+end;
+
+procedure TfrmWorker.SetControls;
+begin
+  Short_Tab.Enabled := UserRights.ShowWorkerInfoSmall;
+  Full_Tab.Enabled := UserRights.ShowWorkerInfoFull;
 end;
 
 procedure TfrmWorker._FramePersonFullcmbDateBirthPropertiesInitPopup(

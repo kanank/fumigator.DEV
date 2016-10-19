@@ -1,28 +1,99 @@
 inherited frmWorkers: TfrmWorkers
   Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
+  ClientHeight = 489
+  ClientWidth = 660
   Position = poDesktopCenter
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
+  ExplicitWidth = 676
+  ExplicitHeight = 527
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 18
+  inherited img1: TImage
+    Left = 639
+    Top = 483
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
+  end
+  inherited RzPanel2: TRzPanel
+    Width = 660
+    Height = 28
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
+    ExplicitWidth = 660
+    ExplicitHeight = 28
+    inherited Image1: TImage
+      Left = 772
+      Top = -15
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+    end
+  end
   inherited RzPanel1: TRzPanel
+    Top = 440
+    Width = 660
+    Height = 49
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
+    ExplicitTop = 440
+    ExplicitHeight = 49
     inherited Cancel_btn: TRzButton
+      Left = 718
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       Font.Color = clWindowText
     end
     inherited Edit_btn: TRzButton
+      Top = 5
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       Font.Color = clWindowText
       OnClick = Edit_btnClick
+      ExplicitTop = 5
     end
     inherited Del_btn: TRzButton
+      Left = 480
+      Top = 5
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       Font.Color = clWindowText
       OnClick = Del_btnClick
+      ExplicitLeft = 480
+      ExplicitTop = 5
     end
     inherited Add_btn: TRzButton
+      Top = 5
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
       Font.Color = clWindowText
       OnClick = Add_btnClick
+      ExplicitTop = 5
     end
   end
   inherited Grid: TcxGrid
+    Top = 28
+    Width = 660
+    Height = 412
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
+    Align = alClient
     inherited GridView: TcxGridDBTableView
       FilterBox.CustomizeDialog = False
       DataController.DataSource = DataModuleMain.DSWorkers
@@ -90,7 +161,7 @@ inherited frmWorkers: TfrmWorkers
       Color = clInactiveCaptionText
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -11
+      Font.Height = -12
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       TextColor = clBlack

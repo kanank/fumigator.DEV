@@ -71,7 +71,6 @@ uses
   DM_Main, IBX.IBQuery, formClientFiz, formClientUr,
   formIncomeCalls, formIncomeCallsUr, formCallUnknown,
   formCallEvent, frmMain, formContact, formSessionResult;
-
 { TfrmIncomeCallRoot }
 
 procedure TfrmIncomeCallRoot.DoCallCancel;
@@ -108,7 +107,7 @@ end;
 
 procedure TfrmIncomeCallRoot.doFinishCall;
 begin
-  inherited;
+  //inherited;
 
   //frmCallEvent.ModalResult := mrCancel;
   //if fClose then
@@ -198,13 +197,13 @@ begin
     begin
       if Assigned(frmIncomeCall) then
       begin
-        fNeedFinish := true;
+        fNeedFinish := True;
         frmIncomeCall.CloseAbsolute;
         Exit;
       end;
       if Assigned(frmIncomeCallUr) then
       begin
-        fNeedFinish := true;
+        fNeedFinish := True;
         frmIncomeCallUr.CloseAbsolute;
         Exit;
       end;
@@ -577,12 +576,12 @@ begin
 
     end
     else
-    if fClientCallPrm.Client_Type = 'U' then
+    if CallObj.CallInfo.ClientType = 'U' then
     begin
       DM.ShowUrCallForm(fClientCallPrm);
     end
     else
-    if fClientCallPrm.Client_Type = 'C' then
+    if CallObj.CallInfo.ClientType = 'C' then
     begin
       DM.ShowContactCallForm(fClientCallPrm);
     end;

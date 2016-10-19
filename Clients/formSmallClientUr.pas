@@ -52,7 +52,7 @@ uses
 
 function TfrmSmallCardUr.CheckFields: Boolean;
 begin
-   Result := (edtName.Text <> '') and (edtFamily.Text <> '') and
+   Result := (edtName.Text <> '') and
     (cmbRegion.EditValue <> 0) and (
     (FrameUslugi.DS.DataSet.RecordCount > 0) or
     (cxDBMemo1.Text <> ''));
@@ -73,7 +73,7 @@ end;
 procedure TfrmSmallCardUr.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-  fCanClose := (txtName.Text <> '') and (edtFamily.Text <> '')
+  fCanClose := (txtName.Text <> '')
     and (edtName.Text <> '') and (cmbRegion.EditValue > 0) and
      ((FrameUslugi.DS.DataSet.RecordCount > 0) or
        (cxDBMemo1.Text <> '')) ;

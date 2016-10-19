@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCalendar, cxContainer, cxCheckBox;
 
 
 type
@@ -69,6 +69,17 @@ type
     NewURClnt_mi: TMenuItem;
     PropStore: TcxPropertiesStore;
     btnFavCli: TRzButton;
+    GridViewAllColumn10: TcxGridDBColumn;
+    GridViewColumn9: TcxGridDBColumn;
+    GridViewUrColumn9: TcxGridDBColumn;
+    chkDeleted: TcxCheckBox;
+    GridViewAllColumn11: TcxGridDBColumn;
+    GridViewColumn10: TcxGridDBColumn;
+    GridViewUrColumn10: TcxGridDBColumn;
+    Edit_btn_mnu: TRzMenuButton;
+    mnuEdit: TPopupMenu;
+    miEditCli: TMenuItem;
+    miChangeTypeCli: TMenuItem;
     procedure Fiz_btnClick(Sender: TObject);
     procedure Ur_btnClick(Sender: TObject);
     procedure Edit_btnClick(Sender: TObject);
@@ -89,6 +100,27 @@ type
     procedure NewFizClnt_miClick(Sender: TObject);
     procedure Add_btn1Click(Sender: TObject);
     procedure btnFavCliClick(Sender: TObject);
+    procedure GridViewAllCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
+    procedure GridViewCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
+    procedure GridViewUrCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
+    procedure chkDeletedClick(Sender: TObject);
+    procedure GridViewAllFocusedRecordChanged(Sender: TcxCustomGridTableView;
+      APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
+    procedure GridViewFocusedRecordChanged(Sender: TcxCustomGridTableView;
+      APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
+    procedure GridViewUrFocusedRecordChanged(Sender: TcxCustomGridTableView;
+      APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
+    procedure miEditCliClick(Sender: TObject);
+    procedure miChangeTypeCliClick(Sender: TObject);
   private
     FisUr: integer;
     fStatus: Integer;
@@ -97,8 +129,10 @@ type
     procedure SetStatus(AValue: integer);
     procedure FilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure SetButton(AButton: TRzButton);
+    procedure SetDelButton(AButton: TRzButton);
   protected
     procedure SetFormRegim(AValue: TSprFormRegim); override;
+    procedure SetControls; override;
   public
     constructor Create(AOwner: TComponent; ADataSet: TDataset = nil; AisUr: Integer=0); overload;
     property isUr: Integer read FisUr write SetIsUr;
@@ -113,7 +147,7 @@ implementation
 {$R *.dfm}
 uses
   IBX.IBQuery,
-  DM_Main, frmMain, formClientFiz, formClientUr, CommonTypes,
+  DM_Main, frmMain, formClientFiz, formClientUr, CommonTypes, CommonVars,
   formClientResult;
 
 
@@ -153,7 +187,6 @@ begin
 
    id := DS.DataSet.FieldByName('id').AsInteger;
   finally
-    //DS.DataSet.Filtered := True;
     DS.DataSet.Locate('ID', id, []);
     Grid.SetFocus;
   end;
@@ -182,6 +215,11 @@ begin
   status := 2;
 end;
 
+procedure TfrmClients.chkDeletedClick(Sender: TObject);
+begin
+  SetFilter;
+end;
+
 constructor TfrmClients.Create(AOwner: TComponent; ADataSet: TDataset = nil; AisUr: Integer=0);
 begin
   DM.ClientList.AfterScroll := nil;
@@ -201,28 +239,32 @@ begin
 end;
 
 procedure TfrmClients.Del_btnClick(Sender: TObject);
-//var
-//  id: integer;
+var
+  i: integer;
 begin
+ if MsgBoxQuestion(Format('Вы действительно хотите %s клиента %s?',
+   [AnsiLowerCase(Del_btn.Caption), DM.Clients.FieldByName('name').AsString])) = IDYES then
+ try
   try
-    //id := DS.DataSet.FieldByName('id').AsInteger;
-    //DS.DataSet.Filtered := false;
-
-    //if not DS.DataSet.Locate('ID', id, []) then
-    //  Exit;
-
     if not (DM.Clients.State in [dsInsert, dsEdit]) then
       DM.Clients.Edit;
 
-    DM.Clients.FieldByName('act').AsInteger := 0;
+    i := Del_btn.Tag;
+    DM.Clients.FieldByName('act').AsInteger := i;
+
     DM.Clients.Post;
-    //DS.Dataset.Delete;
+
     TIBQuery(DM.Clients).ApplyUpdates;
     TIBQuery(DM.Clients).Transaction.CommitRetaining;
-  finally
-    //DS.DataSet.Filtered := True;
+    Del_btn.Tag := Abs(i - 1);
+  except
+    Del_btn.Tag := i;
+    DM.Clients.Cancel;
+    DM.Clients.CancelUpdates;
   end;
-
+ finally
+   SetDelButton(Del_btn);
+ end;
 end;
 
 procedure TfrmClients.Edit_btnClick(Sender: TObject);
@@ -265,7 +307,8 @@ end;
 
 procedure TfrmClients.FilterRecord(DataSet: TDataSet; var Accept: Boolean);
 begin
-  Accept := (DataSet.FieldByName('ACT').AsInteger = 1) and
+  Accept := (not chkDeleted.Checked and
+              (DataSet.FieldByName('ACT').AsInteger = 1) or chkDeleted.Checked) and
              DM.isWorkersRegion(DataSet.FieldByName('region_id').AsInteger) and
             (((isUr >= 0) and (DataSet.FieldByName('type_cli').AsInteger = isUr)) or
              ((isUr < 0) and  (DataSet.FieldByName('type_cli').AsInteger >= 0 ))) and
@@ -297,6 +340,37 @@ begin
   SetFilter;
 end;
 
+procedure TfrmClients.GridViewAllCustomDrawCell(Sender: TcxCustomGridTableView;
+  ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+  var ADone: Boolean);
+var
+  i: Integer;
+begin
+  i := TcxGridDBTableView(Sender).GetColumnByFieldName('act').Index;
+  if AViewInfo.GridRecord.Values[i] = 0 then
+    ACanvas.Font.Style := ACanvas.Font.Style + [fsItalic, fsStrikeOut]
+  else
+    ACanvas.Font.Style := ACanvas.Font.Style - [fsItalic, fsStrikeOut];
+end;
+
+procedure TfrmClients.GridViewAllFocusedRecordChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedRecord,
+  AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+var
+  i: Integer;
+begin
+  if AFocusedRecord = nil then
+    Exit;
+
+  i := TcxGridDBTableView(Sender).GetColumnByFieldName('act').Index;
+
+  if AFocusedRecord.Values[i] = 0 then
+    Del_btn.Tag := 1
+  else
+    Del_btn.Tag := 0;
+  SetDelButton(Del_btn);
+end;
+
 procedure TfrmClients.GridViewCellClick(Sender: TcxCustomGridTableView;
   ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton;
   AShift: TShiftState; var AHandled: Boolean);
@@ -312,6 +386,38 @@ begin
   //ACellViewInfo.GridRecord.Values[TcxGridDBTableView(Sender).GetColumnByFieldName('record-id').Index]
 end;
 
+procedure TfrmClients.GridViewCustomDrawCell(Sender: TcxCustomGridTableView;
+  ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+  var ADone: Boolean);
+var
+  i: Integer;
+begin
+  i := TcxGridDBTableView(Sender).GetColumnByFieldName('act').Index;
+  if AViewInfo.GridRecord.Values[i] = 0 then
+    ACanvas.Font.Style := ACanvas.Font.Style + [fsItalic, fsStrikeOut]
+  else
+    ACanvas.Font.Style := ACanvas.Font.Style - [fsItalic, fsStrikeOut];
+end;
+
+procedure TfrmClients.GridViewFocusedRecordChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedRecord,
+  AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+var
+  i: Integer;
+begin
+  if AFocusedRecord = nil then
+    Exit;
+
+  i := TcxGridDBTableView(Sender).GetColumnByFieldName('act').Index;
+
+  if AFocusedRecord.Values[i] = 0 then
+    Del_btn.Tag := 1
+  else
+    Del_btn.Tag := 0;
+  SetDelButton(Del_btn);
+
+end;
+
 procedure TfrmClients.GridViewUrCellDblClick(Sender: TcxCustomGridTableView;
   ACellViewInfo: TcxGridTableDataCellViewInfo; AButton: TMouseButton;
   AShift: TShiftState; var AHandled: Boolean);
@@ -320,6 +426,69 @@ begin
     Add_btn1.Click
   else
     Edit_btn.Click;
+end;
+
+procedure TfrmClients.GridViewUrCustomDrawCell(Sender: TcxCustomGridTableView;
+  ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+  var ADone: Boolean);
+var
+  i: Integer;
+begin
+  i := TcxGridDBTableView(Sender).GetColumnByFieldName('act').Index;
+  if AViewInfo.GridRecord.Values[i] = 0 then
+    ACanvas.Font.Style := ACanvas.Font.Style + [fsItalic, fsStrikeOut]
+  else
+    ACanvas.Font.Style := ACanvas.Font.Style - [fsItalic, fsStrikeOut];
+end;
+
+procedure TfrmClients.GridViewUrFocusedRecordChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedRecord,
+  AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+var
+  i: Integer;
+begin
+  if AFocusedRecord = nil then
+    Exit;
+
+  i := TcxGridDBTableView(Sender).GetColumnByFieldName('act').Index;
+
+  if AFocusedRecord.Values[i] = 0 then
+    Del_btn.Tag := 1
+  else
+    Del_btn.Tag := 0;
+  SetDelButton(Del_btn);
+end;
+
+procedure TfrmClients.miChangeTypeCliClick(Sender: TObject);
+var
+  i: Integer;
+begin
+if MsgBoxQuestion(Format('Вы действительно хотите изменить тип клиента %s?',
+   [Ds.Dataset.FieldByName('name').AsString])) = IDYES then
+ try
+  try
+    if not (DM.Clients.State in [dsInsert, dsEdit]) then
+      DM.Clients.Edit;
+
+    i := DM.Clients.FieldByName('TYPE_CLI').AsInteger;
+    DM.Clients.FieldByName('TYPE_CLI').AsInteger := Abs(i - 1);
+
+    DM.Clients.Post;
+
+    TIBQuery(DM.Clients).ApplyUpdates;
+    TIBQuery(DM.Clients).Transaction.CommitRetaining;
+  except
+    DM.Clients.Cancel;
+    DM.Clients.CancelUpdates;
+  end;
+ finally
+ end;
+end;
+
+procedure TfrmClients.miEditCliClick(Sender: TObject);
+begin
+  Edit_btn.Click;
+
 end;
 
 procedure TfrmClients.NewFizClnt_miClick(Sender: TObject);
@@ -381,6 +550,25 @@ begin
       AButton.Color  := $00E9F4F8;
       Abutton.Font.Style := Abutton.Font.Style - [fsBold];
     end;
+end;
+
+procedure TfrmClients.SetControls;
+begin
+  Add_btn1.Enabled := UserRights.WorkClientCard;
+  Add_btn.Enabled  := Add_btn1.Enabled;
+  Edit_btn.Enabled := Add_btn1.Enabled;
+  Del_btn.Enabled := Add_btn1.Enabled;
+end;
+
+procedure TfrmClients.SetDelButton(AButton: TRzButton);
+begin
+  if AButton.Tag = 0 then
+    AButton.Caption := 'Удалить'
+  else
+    AButton.Caption := 'Восстановить';
+
+  //mnuEdit.Enabled := AButton.Tag = 0;
+  Edit_btn_mnu.Enabled := AButton.Tag = 0;
 end;
 
 procedure TfrmClients.SetFilter;

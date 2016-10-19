@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dxGDIPlusClasses, Vcl.ExtCtrls,
-  CommonTypes, CommonVars, Data.DB;
+  CommonTypes, CommonVars, Data.DB, CallClasses;
 
 const
   AppCaption = 'Первая фумигационная компания';
@@ -29,6 +29,7 @@ type
     fInUpdate: Boolean; //признак сохранения
     fOnTopMost: Boolean; //находится в режиме TopMost
     fTransfered: Boolean;
+    fCallObj: TCallProto;
 
     procedure SetCaption(AValue: string); virtual;
     procedure SetNonValidate(Alist: string);
@@ -37,14 +38,18 @@ type
     procedure WmFinishCall(var Msg: TMessage); message WM_FINISHCALL;
     procedure WmAcceptCall(var Msg: TMessage); message WM_ACCEPTCALL;
     procedure WmTransferCall(var Msg: TMessage); message WM_TRANSFERCALL;
+    procedure WMActivateForm(var Msg: TMessage); message WM_ACTIVATE;
     procedure DoStartCall; virtual;
     procedure DoFinishCall; virtual;
     procedure DoAcceptCall; virtual;
     procedure DoTransferCall; virtual;
 
+    procedure SetControls; virtual;
+
     function CalcHideOnClose: boolean; virtual;
   public
     property OnCalcHideOnClose: TBooleanFunc read fOnCalcHideOnClose write fOnCalcHideOnClose;
+    property CallObject: TCallProto read fCallObj write fCallObj;
 
     constructor Create(AOwner: TComponent;  ATitle: string=''; AParam: PFrmCreateParam=nil); overload; virtual;
     class function ValidateData(ADataSource: TDataSource; AComponent: TComponent = nil; ANonValidList: TStringList=nil; AValidList: TStringList=nil): Boolean; //проверка заполненности необходимых полей
@@ -115,7 +120,7 @@ end;
 
 procedure TBaseForm.DoFinishCall;
 begin
-  if CallObj.Cancelled or CallObj.Transfered then
+  if (CallObj.Cancelled and not CallObj.Accepted) or CallObj.Transfered then
     if fCloseOnCancelCall then
       Self.CloseAbsolute
     else
@@ -185,6 +190,11 @@ begin
   Caption := AppCaption + '. ' + AValue;
 end;
 
+procedure TBaseForm.SetControls;
+begin
+
+end;
+
 procedure TBaseForm.SetNonValidate(Alist: string);
 begin
   fNonValidateList.DelimitedText := Alist;
@@ -244,6 +254,7 @@ class function TBaseForm.ValidateData(ADataSource: TDataSource; AComponent: TCom
       if c.ComponentCount > 0 then
       begin
         SetRequiredBorder(C, AField);
+
         if (C is TDbFrameBase) and not TDbFrameBase(C).ReadOnly then
           if not TDbFrameBase(C).ValidateData then
             res := False;
@@ -301,6 +312,11 @@ end;
 procedure TBaseForm.WmAcceptCall(var Msg: TMessage);
 begin
   DoAcceptCall;
+end;
+
+procedure TBaseForm.WMActivateForm(var Msg: TMessage);
+begin
+  SetControls;
 end;
 
 procedure TBaseForm.WmFinishCall(var Msg: TMessage);

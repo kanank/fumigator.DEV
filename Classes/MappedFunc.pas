@@ -5,7 +5,7 @@ uses
   classes, windows, sysutils, forms,
   CommonFunc;
 
-function CheckStartRepeat(key:string):boolean;
+function CheckStartRepeat(key:string; ANonCheck: Boolean = false):boolean;
 function ReadMappedFile(var L:TStringList):integer;
 function WriteToMapped(key, val:string):boolean;
 function DelFromMapped(key:string):integer;
@@ -44,7 +44,7 @@ begin
 end;
 
 
-function CheckStartRepeat(key:string):boolean;
+function CheckStartRepeat(key:string; ANonCheck: Boolean = false):boolean;
 var
   isDump:boolean;
   GL: Cardinal;
@@ -110,7 +110,7 @@ begin
     i:=StrToInt(ML.Values[key]);
 
     //BringWindowToTop(i);
-    if IsWindow(i) then //если окно существует
+    if IsWindow(i) and not ANonCheck then //если окно существует
     begin
       ShowWindow(i,SW_SHOW);
       SetForegroundWindow(i);

@@ -73,10 +73,8 @@ begin
       if Query.State = dsBrowse then
         Query.Edit;
       Query.FieldByName('Client_id').AsInteger := client_id;
+      Query.Post;
     end;
-
-    if DM.isModifiedData(Query) then
-      Query.post;
 
     Query.Next;
   end;

@@ -115,6 +115,15 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
       ExplicitLeft = 449
       ExplicitTop = 7
     end
+    inherited btnTransferCall: TRzButton
+      Left = 267
+      Top = 6
+      Height = 40
+      Visible = True
+      ExplicitLeft = 267
+      ExplicitTop = 6
+      ExplicitHeight = 40
+    end
     inherited RzBitBtn1: TRzBitBtn
       Top = 6
       Margins.Left = 6
@@ -133,7 +142,7 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
     Margins.Right = 6
     Margins.Bottom = 6
     DataBinding.DataSource = frmClientFiz.DS
-    TabOrder = 4
+    TabOrder = 3
     ExplicitHeight = 26
   end
   inherited cxDBLookupComboBox3: TcxDBLookupComboBox
@@ -142,7 +151,7 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
     Margins.Right = 6
     Margins.Bottom = 6
     DataBinding.DataSource = frmClientFiz.DS
-    TabOrder = 5
+    TabOrder = 4
     ExplicitWidth = 94
     ExplicitHeight = 26
     Width = 94
@@ -153,7 +162,7 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
     Margins.Right = 6
     Margins.Bottom = 6
     Style.IsFontAssigned = True
-    TabOrder = 6
+    TabOrder = 5
     ExplicitWidth = 224
     ExplicitHeight = 30
     Height = 30
@@ -180,26 +189,6 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
     StyleFocused.LookAndFeel.NativeStyle = True
     StyleHot.LookAndFeel.Kind = lfFlat
     StyleHot.LookAndFeel.NativeStyle = True
-    TabOrder = 2
-    Width = 224
-  end
-  object edtFamily: TcxDBTextEdit [12]
-    Left = 93
-    Top = 11
-    Margins.Left = 4
-    Margins.Top = 4
-    Margins.Right = 4
-    Margins.Bottom = 4
-    Anchors = [akLeft, akTop, akRight]
-    BeepOnEnter = False
-    DataBinding.DataField = 'FAMILY'
-    Style.HotTrack = False
-    Style.LookAndFeel.NativeStyle = True
-    Style.TransparentBorder = True
-    StyleDisabled.Color = clBtnFace
-    StyleDisabled.LookAndFeel.NativeStyle = True
-    StyleFocused.LookAndFeel.NativeStyle = True
-    StyleHot.LookAndFeel.NativeStyle = True
     TabOrder = 1
     Width = 224
   end
@@ -211,7 +200,7 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
     Margins.Right = 6
     Margins.Bottom = 6
     DataBinding.DataSource = frmClientFiz.DS
-    TabOrder = 3
+    TabOrder = 2
     ExplicitLeft = 415
     ExplicitTop = 10
     ExplicitWidth = 207
@@ -226,7 +215,7 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
-    TabOrder = 8
+    TabOrder = 7
     ExplicitLeft = 350
     ExplicitWidth = 272
     ExplicitHeight = 154
@@ -321,12 +310,31 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
     Margins.Right = 6
     Margins.Bottom = 6
     DataBinding.DataSource = frmClientFiz.DS
-    TabOrder = 7
     ExplicitLeft = 350
     ExplicitTop = 223
     ExplicitWidth = 272
     ExplicitHeight = 71
     Height = 71
     Width = 272
+  end
+  object edtFamily: TcxDBTextEdit
+    Left = 93
+    Top = 11
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
+    Anchors = [akLeft, akTop, akRight]
+    BeepOnEnter = False
+    DataBinding.DataField = 'FAMILY'
+    Style.HotTrack = False
+    Style.LookAndFeel.NativeStyle = True
+    Style.TransparentBorder = True
+    StyleDisabled.Color = clBtnFace
+    StyleDisabled.LookAndFeel.NativeStyle = True
+    StyleFocused.LookAndFeel.NativeStyle = True
+    StyleHot.LookAndFeel.NativeStyle = True
+    TabOrder = 8
+    Width = 224
   end
 end

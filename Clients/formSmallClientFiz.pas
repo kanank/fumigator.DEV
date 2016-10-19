@@ -49,7 +49,7 @@ uses
 
 function TfrmSmallCardFiz.CheckFields: Boolean;
 begin
-   Result := (edtName.Text <> '') and (edtFamily.Text <> '') and
+   Result := (edtName.Text <> '') and
     (cmbRegion.EditValue <> 0) and(
     (FrameUslugi.DS.DataSet.RecordCount > 0) or
     (cxDBMemo1.Text <> ''));

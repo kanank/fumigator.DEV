@@ -1,16 +1,16 @@
 inherited frmSessions: TfrmSessions
   Caption = #1057#1077#1089#1089#1080#1080
   ClientHeight = 660
-  ClientWidth = 1250
+  ClientWidth = 1258
   Position = poDesktopCenter
   OnCreate = FormCreate
-  ExplicitLeft = -456
-  ExplicitWidth = 1266
+  ExplicitLeft = -393
+  ExplicitWidth = 1274
   ExplicitHeight = 698
   PixelsPerInch = 96
   TextHeight = 18
   inherited img1: TImage
-    Left = 983
+    Left = 991
     Top = 516
     Margins.Left = 6
     Margins.Top = 6
@@ -20,14 +20,15 @@ inherited frmSessions: TfrmSessions
     ExplicitTop = 572
   end
   inherited RzPanel2: TRzPanel
-    Width = 1250
+    Width = 1258
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
+    Transparent = True
     ExplicitWidth = 1250
     inherited Image1: TImage
-      Left = 1123
+      Left = 1131
       Top = 2
       Height = 42
       Margins.Left = 6
@@ -36,6 +37,8 @@ inherited frmSessions: TfrmSessions
       Margins.Bottom = 6
       Align = alRight
       ExplicitLeft = 1145
+      ExplicitTop = 2
+      ExplicitHeight = 42
     end
     object Label11: TLabel
       Left = 12
@@ -88,7 +91,7 @@ inherited frmSessions: TfrmSessions
     end
     object RzButton1: TRzButton
       Left = 508
-      Top = 7
+      Top = 4
       Width = 115
       Height = 29
       Margins.Left = 4
@@ -119,7 +122,10 @@ inherited frmSessions: TfrmSessions
         #1042#1089#1077
         #1055#1088#1080#1085#1103#1090#1099#1077
         #1048#1089#1093#1086#1076#1103#1097#1080#1077
-        #1055#1088#1086#1087#1091#1097#1077#1085#1085#1099#1077)
+        #1055#1088#1086#1087#1091#1097#1077#1085#1085#1099#1077
+        #1044#1083#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100#1102' '#1073#1086#1083#1077#1077' 40 '#1089#1077#1082
+        #1042#1089#1077' '#1088#1072#1079#1075#1086#1074#1086#1088#1099
+        #1055#1088#1086#1087#1091#1097#1077#1085#1085#1099#1077' '#1076#1083#1103' '#1082#1086#1084#1087#1072#1085#1080#1080)
       Properties.OnChange = cmbFilterPropertiesChange
       TabOrder = 2
       Width = 188
@@ -141,7 +147,7 @@ inherited frmSessions: TfrmSessions
   end
   inherited RzPanel1: TRzPanel
     Top = 607
-    Width = 1250
+    Width = 1258
     Height = 53
     Margins.Left = 6
     Margins.Top = 6
@@ -151,7 +157,7 @@ inherited frmSessions: TfrmSessions
     ExplicitWidth = 1250
     ExplicitHeight = 53
     inherited Cancel_btn: TRzButton
-      Left = 1062
+      Left = 1070
       Top = 6
       Margins.Left = 6
       Margins.Top = 6
@@ -177,20 +183,20 @@ inherited frmSessions: TfrmSessions
       Visible = False
     end
     inherited Edit_btn: TRzButton [3]
-      Left = 12
+      Left = 13
       Top = 6
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
       OnClick = Edit_btnClick
-      ExplicitLeft = 12
+      ExplicitLeft = 13
       ExplicitTop = 6
     end
   end
   inherited Grid: TcxGrid
     Top = 129
-    Width = 1250
+    Width = 1258
     Height = 478
     Margins.Left = 6
     Margins.Top = 6
@@ -198,8 +204,8 @@ inherited frmSessions: TfrmSessions
     Margins.Bottom = 6
     Align = alClient
     PopupMenu = GridPopup
-    ExplicitTop = 129
-    ExplicitWidth = 1250
+    ExplicitTop = 130
+    ExplicitWidth = 1258
     ExplicitHeight = 478
     inherited GridView: TcxGridDBTableView
       OnCustomDrawCell = GridViewCustomDrawCell
@@ -236,7 +242,7 @@ inherited frmSessions: TfrmSessions
         DataBinding.FieldName = 'CALLERNUM'
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
-        Width = 93
+        Width = 127
       end
       object GridViewColumn8: TcxGridDBColumn
         Caption = #1050#1083#1080#1077#1085#1090
@@ -252,6 +258,15 @@ inherited frmSessions: TfrmSessions
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
         Width = 90
+      end
+      object GridViewColumn15: TcxGridDBColumn
+        Caption = #1059#1089#1083#1091#1075#1080
+        DataBinding.FieldName = 'USLUGI'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Options.FilteringAddValueItems = False
+        Styles.Header = cxStyle1
+        Width = 65
       end
       object GridViewColumn3: TcxGridDBColumn
         Caption = #8470' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -273,32 +288,34 @@ inherited frmSessions: TfrmSessions
         Properties.ListSource = DataModuleMain.DSWorkers
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
-        Width = 185
+        Width = 116
       end
       object GridViewColumn9: TcxGridDBColumn
         Caption = #1048#1089#1093#1086#1076
         DataBinding.FieldName = 'ISHOD'
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
-        Width = 155
+        Width = 131
       end
       object GridViewColumn10: TcxGridDBColumn
         Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1082' '#1089#1077#1089#1089#1080#1080
         DataBinding.FieldName = 'RESULT'
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
-        Width = 173
+        Width = 169
       end
       object GridViewColumn6: TcxGridDBColumn
         Caption = #1044#1083#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'DATESTRING'
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
-        Width = 96
+        Width = 92
       end
       object GridViewColumn4: TcxGridDBColumn
         Caption = #1053#1072#1095#1072#1083#1086
         DataBinding.FieldName = 'STARTTIME'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'dd.mm.yy hh:nn:ss.zzz'
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
         Width = 106
@@ -306,6 +323,8 @@ inherited frmSessions: TfrmSessions
       object GridViewColumn5: TcxGridDBColumn
         Caption = #1050#1086#1085#1077#1094
         DataBinding.FieldName = 'ENDTIME'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'dd.mm.yy hh:nn:ss.zzz'
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
         Width = 114
@@ -321,7 +340,7 @@ inherited frmSessions: TfrmSessions
         Caption = #1047#1072#1087#1080#1089#1100
         HeaderAlignmentHorz = taCenter
         Styles.Header = cxStyle1
-        Width = 60
+        Width = 70
       end
       object GridViewColumn12: TcxGridDBColumn
         DataBinding.FieldName = 'CALLAPIID'
@@ -351,7 +370,7 @@ inherited frmSessions: TfrmSessions
   object RzPanel3: TRzPanel
     Left = 0
     Top = 46
-    Width = 1250
+    Width = 1258
     Height = 83
     Margins.Left = 4
     Margins.Top = 4
@@ -360,10 +379,14 @@ inherited frmSessions: TfrmSessions
     Align = alTop
     BorderSides = []
     TabOrder = 4
+    ExplicitWidth = 1250
+    DesignSize = (
+      1258
+      83)
     object cxGrid1: TcxGrid
       Left = 0
       Top = 0
-      Width = 1250
+      Width = 1258
       Height = 74
       Margins.Left = 4
       Margins.Top = 4
@@ -371,6 +394,7 @@ inherited frmSessions: TfrmSessions
       Margins.Bottom = 4
       Align = alTop
       TabOrder = 0
+      ExplicitWidth = 1250
       object cxGridDBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         Navigator.InfoPanel.Visible = True
@@ -438,10 +462,79 @@ inherited frmSessions: TfrmSessions
         GridView = cxGridDBTableView1
       end
     end
+    object pnlFiltered: TPanel
+      Left = 944
+      Top = 52
+      Width = 313
+      Height = 31
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Anchors = [akLeft, akRight, akBottom]
+      BevelEdges = []
+      BevelOuter = bvNone
+      BorderWidth = 1
+      BorderStyle = bsSingle
+      Color = clCream
+      Ctl3D = False
+      ParentBackground = False
+      ParentCtl3D = False
+      ShowCaption = False
+      TabOrder = 1
+      Visible = False
+      DesignSize = (
+        311
+        29)
+      object Label2: TLabel
+        Left = 3
+        Top = 5
+        Width = 190
+        Height = 18
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
+        AutoSize = False
+        Caption = #1054#1090#1092#1080#1083#1100#1090#1088#1086#1074#1072#1085#1086' '#1089#1090#1088#1086#1082': '
+        Color = clBtnShadow
+        EllipsisPosition = epPathEllipsis
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -15
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        GlowSize = 10
+        ParentColor = False
+        ParentFont = False
+      end
+      object lblCount: TLabel
+        Left = 189
+        Top = 6
+        Width = 116
+        Height = 18
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Anchors = [akRight, akBottom]
+        AutoSize = False
+        Color = clBtnShadow
+        EllipsisPosition = epPathEllipsis
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -15
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        GlowSize = 10
+        ParentColor = False
+        ParentFont = False
+      end
+    end
   end
   object pnlForm: TPanel
-    Left = 788
-    Top = 111
+    Left = 650
+    Top = 161
     Width = 190
     Height = 34
     Margins.Left = 4
@@ -467,16 +560,15 @@ inherited frmSessions: TfrmSessions
         'd CALLEDN,'
       ' (select datestring from diffdatestr(starttime, endtime)),'
       
-        ' case when calltype=0 then (select count(*)from sessions where c' +
-        'allapiid=s.callapiid'
-      
-        ' and localnum not like '#39'%*%'#39') else 0 end answer, recid as recapi' +
-        'id'
+        ' (select count(*)from sessions where callapiid=s.callapiid  and ' +
+        'accepted=1) answer,'
+      ' recid as recapiid,'
+      ' (select str from get_services_client(s.client_id)) uslugi'
       'from sessions s'
       
         'where starttime >=:date1 and  starttime <:date2 and endtime is n' +
-        'ot null')
-    OnFilterRecord = QFilterRecord
+        'ot null'
+      'order by starttime')
     Left = 72
     Top = 80
     ParamData = <

@@ -51,15 +51,13 @@ inherited frmCallUnknown: TfrmCallUnknown
     ExplicitTop = 418
     ExplicitWidth = 530
     inherited Image2: TImage
-      Left = 0
-      Top = 2
-      Height = 47
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
-      Align = alLeft
       ExplicitLeft = 6
+      ExplicitTop = 2
+      ExplicitHeight = 47
     end
     inherited Exit_bnt: TRzButton
       Left = 346
@@ -72,6 +70,13 @@ inherited frmCallUnknown: TfrmCallUnknown
       Caption = #1054#1090#1084#1077#1085#1072
       OnClick = Exit_bntClick
       ExplicitLeft = 346
+      ExplicitTop = 7
+    end
+    inherited btnTransferCall: TRzButton
+      Left = 181
+      Top = 7
+      Visible = True
+      ExplicitLeft = 181
       ExplicitTop = 7
     end
   end

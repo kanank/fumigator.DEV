@@ -67,7 +67,6 @@ end;
 
 destructor TframeClientCalls.Destroy;
 begin
-  fPlay.Parent := nil;
   fPlay.Free;
   inherited;
 end;
@@ -115,14 +114,14 @@ begin
   fPlay.RecId   := sRecId;
 
   fPlay.FileName  := '';
-  fPlay.Width  := ColumnRecord.Width - 4;
+  fPlay.Width  := 36;//ColumnRecord.Width - 4;
   fPlay.Height := focusedCell.Height-2;
   pnlForm.Width  := fPlay.Width;
   pnlForm.Height := fPlay.Height;
   fPlay.Top := 0;
   fPlay.Left := 0;
   fPlay.Visible := True;
-  pnlForm.Visible := True;
+  pnlForm.Visible := fPlay.RecId <> '';
   pnlForm.BringToFront;
   fPlay.BringToFront;
 end;

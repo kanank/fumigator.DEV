@@ -105,17 +105,21 @@ inherited FramePhones: TFramePhones
     end
     inherited RzPanel2: TRzPanel
       Left = 182
+      Top = 17
       Height = 123
+      Align = alNone
+      Anchors = [akLeft, akTop, akRight, akBottom]
       ExplicitLeft = 182
+      ExplicitTop = 17
       ExplicitHeight = 123
       DesignSize = (
         31
         123)
       inherited btnAdd: TRzBitBtn
         Left = 0
-        Top = -4
+        Top = -1
         ExplicitLeft = 0
-        ExplicitTop = -4
+        ExplicitTop = -1
       end
       inherited btnEdit: TRzBitBtn
         Left = 0

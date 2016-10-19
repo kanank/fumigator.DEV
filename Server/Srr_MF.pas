@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Mask,
   Vcl.Samples.Spin, IdBaseComponent, IdComponent, IdCustomTCPServer,
   IdCustomHTTPServer, IdHTTPServer, IdContext, Data.DB, IBX.IBDatabase,
-  IBX.IBCustomDataSet, IBX.IBQuery, SyncObjs, System.Win.ScktComp,
+  IBX.IBCustomDataSet, IBX.IBQuery, SyncObjs,
   TelpinRingMeAPI, IBX.IBEvents, IdTCPServer, idSync, IdGlobal, IdAntiFreezeBase,
   Vcl.IdAntiFreeze, IBX.IBSQL, RzCommon, RzSelDir, ATBinHex, Vcl.ComCtrls,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
@@ -15,6 +15,7 @@ uses
 
 const
   WM_REOPEN_PHONES = WM_USER + 1;
+  WM_REOPEN_RIGHTS = WM_USER + 2;
 
 type
   TLogger = class
@@ -68,7 +69,7 @@ type
     procedure Execute; override;
     procedure DeleteSession;
     procedure StartCall(CallApiId: string; ats: string);
-    procedure EndCall(CallApiId, CallStatus: string);
+    procedure EndCall(CallApiId, ats, CallStatus: string);
     procedure TransferCall(CallId: string; ats: string);
     procedure AcceptCall(CallId: string);
     procedure SendMess;
@@ -102,7 +103,7 @@ type
     function FindClientByPhone(ACallFlow, ACallId, ACallApiId: string; APhone: string; Aats: string; var AclientIdType: string): Integer;
     function FindSession(ACallId:string; ALock: boolean = true): TCallSession;
     procedure StartCall(CallId: string; ats: string);
-    function EndCall(ACallApiId, ACallId, ACallStatus: string): boolean;
+    function EndCall(ACallApiId, ACallId, ats, ACallStatus: string): boolean;
     procedure AcceptCall(ACallId: string);
   public
     constructor Create(AParam: TStrings; AURI, AUserId, ASql: string); overload;
@@ -225,6 +226,7 @@ type
 
     procedure ReopenPhones;
     procedure WmReopenPhones(var Msg: TMessage); message WM_REOPEN_PHONES;
+    procedure WmReopenRights(var Msg: TMessage); message WM_REOPEN_RIGHTS;
 
     function GetRecordFile(ARecord_uuid: string): string;
   public
@@ -263,6 +265,7 @@ var
   EventsMutex: THandle;
   CallMutex: THandle;
   CSectionMsg: TCriticalSection;
+  CDbSection:  TCriticalSection;
 
 implementation
 
@@ -462,8 +465,18 @@ begin
 end;
 
 procedure TMF.Button6Click(Sender: TObject);
+var
+  i: Integer;
+  s: string;
 begin
-  SendCommandToUser('*', Edit1.Text);
+  i := Pos('#', Edit1.Text);
+  if i <= 1 then
+    SendCommandToUser('*', Edit1.Text)
+  else
+  begin
+    s := LeftStr(Edit1.Text, i - 1);
+    SendCommandToUser(s, Copy(Edit1.Text, i, Length(Edit1.Text)));
+  end;
 end;
 
 procedure TMF.Button7Click(Sender: TObject);
@@ -507,10 +520,10 @@ begin
   begin
     DecodeVersion(edtVersion.Text, v01, v02, v03, v04);
     DecodeVersion(AContext.Version, v1, v2, v3, v4);
-    if (v01 - v1 < 0) or
-       (v02 - v2 < 0) or
-       (v03 - v3 < 0) or
-       (v04 - v4 < 0) then
+    if (v01 - v1 > 0) or
+       (v02 - v2 > 0) or
+       (v03 - v3 > 0) or
+       (v04 - v4 > 0) then
        AContext.Connection.IOHandler.WriteLn(Format(GetSocketCmdSrv(SCMD_NEEDUPDATE), [edtVersion.Text]));
   end;
 end;
@@ -643,6 +656,7 @@ begin
   CSectionCommand   := TCriticalSection.Create;
   CSectionLog       := TCriticalSection.Create;
   CSectionMsg       := TCriticalSection.Create;
+  CDbSection        := TCriticalSection.Create;
   fSessions         := TStringList.Create;
 
   AccessToken := TTelphinRingMeToken.Create;
@@ -678,6 +692,7 @@ begin
   CSectionCommand.Release;
   CSectionLog.Release;
   CSectionMsg.Release;
+  CDbSection.Release;
 
   FreeAndNil(AccessToken);
   //FreeAndNil(Caller);
@@ -708,6 +723,9 @@ begin
     else
     if EventName = 'PHONES_CHANGED' then
       PostMessage(Self.Handle, WM_REOPEN_PHONES, 0, 1)
+    else
+     if EventName = 'RIGHTS_CHANGED' then
+        PostMessage(Self.Handle, WM_REOPEN_RIGHTS, 0, 0);
 
 
   finally
@@ -926,7 +944,7 @@ begin
     begin
       Context := TMyContext(List[I]);
       Result := Result + Format('%s | %s',
-       [Context.Nick, Context.Version]);
+       [Context.Nick, Context.Version]) + #13#10;
     end;
 
   finally
@@ -1018,6 +1036,7 @@ begin
         try
           Context.Connection.IOHandler.WriteLn(AMsg);
           Result := True;
+          AddLogMemo(Format('Отправлено [%s]: %s', [Context.Nick, AMsg]));
           CheckContextVersion(Context);
         except
           Context.Connection.IOHandler.Close;
@@ -1182,7 +1201,7 @@ begin
     if s = '' then
       Exit;
 
-    AddLogMemo('#Клиент прислал сообщение: ' + s);
+    AddLogMemo(Format('Клиент [%s] прислал сообщение: %s',[TMyContext(AContext).Nick, s]));
     if Copy(s, 1, 1) = '#' then
     begin
       p := Pos(':', s);
@@ -1338,8 +1357,13 @@ begin
     ReopenPhones;
   finally
     if Msg.LParam = 0 then
-      SendCommandToUser('*', '#cmdfumigator:updateclients');
+
   end;
+end;
+
+procedure TMF.WmReopenRights(var Msg: TMessage);
+begin
+  SendCommandToUser('*', '#cmdfumigator:updaterights');
 end;
 
 procedure TMF.WriteLog(s: string);
@@ -1566,13 +1590,18 @@ begin
       while not fOk and (step < 10) do
       Try
         //WriteLog('Исполняем ' + fibSql.SQL.Text + #13#10 + fParams.Text);
-        Transaction. Active := True;
-        ExecQuery;
-        if Transaction.Active then
-           Transaction.Commit;
+        CDbSection.Enter; //временно. сделать диспетчер
+        try
+          Transaction. Active := True;
+          ExecQuery;
+          if Transaction.Active then
+             Transaction.Commit;
         //WriteLog('Записан Call Events с ID: '+ fParams.Values['CallID']+ ' - '
         //     + fParams.Values['CallStatus'], False);
-        fOk := True;
+          fOk := True;
+        finally
+          CDbSection.Leave;
+        end;
       Except
         on E : Exception do
         begin
@@ -1607,9 +1636,13 @@ end;
 
 procedure TDbWriter.WriteLog(Amess: string; Ablock: Boolean);
 begin
-  fMess := Amess;
-  fMessLock := Ablock;
-  Synchronize(Log);
+  try
+    fMess := Amess;
+    fMessLock := Ablock;
+    Synchronize(Log);
+  finally
+
+  end;
 end;
 
 { TCallSession }
@@ -1659,15 +1692,14 @@ begin
   inherited;
 end;
 
-procedure TCallSession.EndCall(CallApiId, CallStatus: string);
+procedure TCallSession.EndCall(CallApiId, ats, CallStatus: string);
 var
   ind: Integer;
-  ats: string;
 begin
   //fFinished := True;
   if LockMutex(CallMutex, 2000) then
   try
-    ind := fCallIdList.IndexOf(CallApiId);
+    ind := fCallIdList.IndexOf(ats);
     if ind = -1 then
       Exit;
     fCallIdList.Delete(ind);
@@ -1682,7 +1714,7 @@ procedure TCallSession.Execute;
 begin
   fWorkTime := 0;
   while not Terminated do
-  begin
+  try
     Sleep(300);
     Inc(fWorkTime, 300);
 
@@ -1701,6 +1733,8 @@ begin
       Terminate;
       WriteLog('Уничтожен TCallSession: ' + CallId);
     end;
+  except
+    WriteLog('Ошибка TCallSession: ' + Exception(ExceptObject).Message);
   end;
   Terminate;
 end;
@@ -1715,7 +1749,7 @@ procedure TCallSession.StartCall(CallApiId, ats: string);
 begin
   if LockMutex(CallMutex, 1000) then
   try
-    fCallIdList.Add(CallApiId );
+    fCallIdList.Add(ats);
     fStopTime := 0;
   finally
     UnlockMutex(CallMutex);
@@ -1775,7 +1809,7 @@ begin
   inherited;
 end;
 
-function TEventWriter.EndCall(ACallApiId, ACallId, ACallStatus: string): boolean;
+function TEventWriter.EndCall(ACallApiId, ACallId, ats, ACallStatus: string): boolean;
 var
   ind: Integer;
 begin
@@ -1784,7 +1818,7 @@ begin
     ind := MF.fSessions.IndexOf(ACallId);
     if ind > -1 then
     begin
-      TCallSession(MF.fSessions.Objects[ind]).EndCall(ACallApiId, ACallStatus);
+      TCallSession(MF.fSessions.Objects[ind]).EndCall(ACallApiId, ats, ACallStatus);
       Exit;
     end;
   finally
@@ -1805,7 +1839,7 @@ begin
        fParams.Text;
   WriteLog(s);
 
-  begin
+  try
     if fParams.indexOfName('CALLFLOW') = -1 then
       Exit;
 
@@ -1844,7 +1878,12 @@ begin
     begin
       client_id := 0; client_type := '';
       if pos(fUserId + '*', tel) = 0 then
-         FindClientByPhone(fParams.Values['CALLFLOW'], fParams.Values['CALLID'], fParams.Values['CALLAPIID'], tel, ats, client_type)
+         FindClientByPhone(fParams.Values['CALLFLOW'],
+                           fParams.Values['CALLID'],
+                           fParams.Values['CALLAPIID'],
+                           tel,
+                           ats,
+                           client_type)
       else
       begin
          CallObj := nil;
@@ -1870,7 +1909,9 @@ begin
            fParams.Values['CallAPIID'] + ',' +
            tel + ',' +
            //IntToStr(client_id) + ',' +
-           client_type)
+           client_type  + ',' +
+           fParams.Values['CalledNumber'] + ',' +
+           fParams.Values['CallerIDNum'])
     end
     //end
 
@@ -1884,7 +1925,7 @@ begin
           fParams.Values['CallAPIID'] + ',' +
           fParams.Values['CallStatus']);
         //if cf = 0 then
-        EndCall(fParams.Values['CallAPIID'], fParams.Values['CallID'], fParams.Values['CallStatus']);
+        EndCall(fParams.Values['CallAPIID'], fParams.Values['CallID'], ats, fParams.Values['CallStatus']);
       end;
     end
 
@@ -1894,6 +1935,8 @@ begin
       SendCommandToUser(ats, Format('#callaccepted:%s', [fParams.Values['CallID']]));
       AcceptCall(fParams.Values['CallID']);
     end;
+  except
+    WriteLog('Ошибка TEventWriter: ' + Exception(ExceptObject).Message);
   end;
 end;
 

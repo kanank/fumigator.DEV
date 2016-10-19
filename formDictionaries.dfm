@@ -4,7 +4,6 @@ inherited frmDictionaries: TfrmDictionaries
   ClientWidth = 1070
   Position = poDesktopCenter
   OnShow = FormShow
-  ExplicitLeft = -204
   ExplicitWidth = 1086
   ExplicitHeight = 518
   PixelsPerInch = 96
@@ -27,7 +26,8 @@ inherited frmDictionaries: TfrmDictionaries
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
-    ExplicitWidth = 1284
+    ExplicitTop = 429
+    ExplicitWidth = 1070
     inherited Image2: TImage
       Margins.Left = 6
       Margins.Top = 6

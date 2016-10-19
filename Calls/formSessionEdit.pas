@@ -5,16 +5,31 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ClassSimpleForm, RzButton, Vcl.ExtCtrls,
-  RzPanel, dxGDIPlusClasses, frameBase, frListBase, frClientCalls;
+  RzPanel, dxGDIPlusClasses, frameBase, frListBase, frClientCalls, cxGraphics,
+  cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis,
+  dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
+  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
+  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
+  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
+  dxSkinOffice2013White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxScrollBox;
 
 type
   TfrmSessionEdit = class(TSimpleForm)
-    pnlResult: TRzPanel;
-    pnlCalls: TRzPanel;
-    pnlClient: TRzPanel;
     RzButton1: TRzButton;
-    frameClientCalls: TframeClientCalls;
     btnClientEdit: TRzButton;
+    ScrollBox: TScrollBox;
+    pnlCalls: TRzPanel;
+    frameClientCalls: TframeClientCalls;
+    pnlClient: TRzPanel;
+    pnlResult: TRzPanel;
     procedure btnClientEditClick(Sender: TObject);
     procedure RzButton1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -72,6 +87,7 @@ procedure TfrmSessionEdit.FormDestroy(Sender: TObject);
 begin
   if Assigned(frm) then
   begin
+    frm.hide;
     frm.Parent := nil;
     if frm is TfrmClientFiz then
     begin
@@ -103,6 +119,11 @@ procedure TfrmSessionEdit.FormShow(Sender: TObject);
 begin
   btnClientEdit.Enabled := Assigned(frm);
 
+  pnlClient.Top := pnlResult.Height + 1;
+  pnlCalls.Top  := pnlClient.Top + pnlClient.Height + 1;
+  ScrollBox.VertScrollBar.Range := pnlCalls.Top + pnlcalls.Height;
+  ScrollBox.VertScrollBar.Visible := True;
+
 end;
 
 procedure TfrmSessionEdit.RzButton1Click(Sender: TObject);
@@ -131,7 +152,8 @@ begin
   begin
     TfrmClientFiz(frm).RzPanel1.Visible := False;
     TfrmClientFiz(frm).FrameClientCalls.Visible := False;
-    frm.Height := frm.Height - TfrmClientFiz(frm).RzPanel1.Height -
+
+    pnlClient.Height := frm.Height - TfrmClientFiz(frm).RzPanel1.Height -
       TfrmClientFiz(frm).frameClientCalls.Height ;
     TfrmClientFiz(frm).Mode := asShow;
   end
@@ -148,7 +170,8 @@ begin
 
   if frm.Width > self.Width then
     self.Width := frm.Width;
-  pnlClient.Height := frm.Height;
+  pnlClient.Top := pnlResult.Height + 1;
+ // pnlClient.Height := frm.Height;
 
   frm.Show;
 

@@ -52,6 +52,7 @@ type
   protected
     procedure doFinishCall; override;
     procedure doAcceptCall; override;
+    procedure doTransferCall; override;
   public
     TypeBtnClick: string; //нажатая кнопка
     SubTypeBtnClick: string; //подтип
@@ -124,6 +125,13 @@ procedure TfrmCallUnknown.doFinishCall;
 begin
   //if not CallObj.Accepted then
   //  ModalResult := mrCancel;
+end;
+
+procedure TfrmCallUnknown.doTransferCall;
+begin
+begin
+  Self.HideAbsolute;
+end;
 end;
 
 procedure TfrmCallUnknown.Exit_bntClick(Sender: TObject);

@@ -1,13 +1,14 @@
 inherited frmMain: TfrmMain
+  ClientWidth = 688
   Position = poDesktopCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  ExplicitWidth = 657
+  ExplicitWidth = 704
   ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 18
   inherited img1: TImage
-    Left = 389
+    Left = 436
     Top = 274
     Width = 249
     Height = 81
@@ -33,10 +34,11 @@ inherited frmMain: TfrmMain
     ParentFont = False
   end
   object lblCall: TRzLabel
-    Left = 379
-    Top = 270
-    Width = 77
-    Height = 94
+    Left = 381
+    Top = 255
+    Width = 115
+    Height = 105
+    Alignment = taRightJustify
     Anchors = [akRight, akBottom]
     Caption = ')'
     Font.Charset = SYMBOL_CHARSET
@@ -47,10 +49,13 @@ inherited frmMain: TfrmMain
     ParentFont = False
     Transparent = False
     Visible = False
+    Angle = 160
     BlinkColor = clLime
     BlinkIntervalOff = 1000
     BlinkIntervalOn = 1000
     FlyByColor = clLime
+    Rotation = roFlat
+    ExplicitLeft = 334
   end
   object btnWorkers: TRzMenuButton
     Left = 8
@@ -91,9 +96,8 @@ inherited frmMain: TfrmMain
     ThemeAware = False
     OnClick = btnTuneClick
     DropDownMenu = mOptions
-    ShowArrow = False
   end
-  object RzMenuButton1: TRzMenuButton
+  object btnNewClient: TRzMenuButton
     Left = 8
     Top = 8
     Width = 170
@@ -110,7 +114,6 @@ inherited frmMain: TfrmMain
     TabOrder = 2
     ThemeAware = False
     DropDownMenu = NewClientBtn_PUM
-    ShowArrow = False
   end
   object btnClients: TRzMenuButton
     Left = 8
@@ -130,12 +133,11 @@ inherited frmMain: TfrmMain
     ThemeAware = False
     OnClick = btnClientsClick
     DropDownMenu = Clients_PUM
-    ShowArrow = False
   end
   object RzMenuButton2: TRzMenuButton
     Left = 528
     Top = 19
-    Width = 87
+    Width = 134
     Height = 31
     Anchors = [akLeft, akRight, akBottom]
     Caption = #1058#1077#1089#1090' '#1079#1074#1086#1085#1082#1072
@@ -152,6 +154,7 @@ inherited frmMain: TfrmMain
     Visible = False
     OnClick = RzMenuButton2Click
     ShowArrow = False
+    ExplicitWidth = 87
   end
   object RzMenuButton3: TRzMenuButton
     Left = 205
@@ -172,7 +175,7 @@ inherited frmMain: TfrmMain
     OnClick = RzMenuButton3Click
     ShowArrow = False
   end
-  object RzMenuButton4: TRzMenuButton
+  object btnSessions: TRzMenuButton
     Left = 8
     Top = 82
     Width = 170
@@ -188,7 +191,7 @@ inherited frmMain: TfrmMain
     ParentFont = False
     TabOrder = 6
     ThemeAware = False
-    OnClick = RzMenuButton4Click
+    OnClick = btnSessionsClick
     ShowArrow = False
   end
   object btnReports: TRzMenuButton
@@ -300,6 +303,13 @@ inherited frmMain: TfrmMain
     Interval = 2000
     OnTimer = TimerCheckTimer
     Left = 456
+    Top = 136
+  end
+  object TimerUpdate: TTimer
+    Enabled = False
+    Interval = 120000
+    OnTimer = TimerUpdateTimer
+    Left = 512
     Top = 136
   end
 end

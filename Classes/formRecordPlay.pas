@@ -154,6 +154,8 @@ begin
 end;
 
 procedure TfrmRecordPlay.btnPlayClick(Sender: TObject);
+var
+  f: Boolean;
 begin
   if Assigned(Self.Parent) then
     TForm(Parent.Owner).Enabled := False;
@@ -165,18 +167,22 @@ begin
       Exit;
     end;
 
-    if GetFileFromHttp then
+    if (MediaPlayer.FileName = '') or
+       (ExtractFileName(MediaPlayer.FileName) <> (RecId + '.mp3')) then
     begin
-      MediaPlayer.Close;
-      MediaPlayer.FileName := fFileName;
-      MediaPlayer.Open;
-      MediaPlayer.Play;
-      btnStop.Visible := True;
-    end
-    else
-    begin
-      MessageBox(0, 'Произошла ошибка получения звукового файла', 'Фумигатор', MB_ICONERROR);
+      f := GetFileFromHttp;
+      if not f then
+      begin
+        MsgBoxError('Произошла ошибка получения звукового файла');
+        Exit;
+      end;
     end;
+
+    MediaPlayer.Close;
+    MediaPlayer.FileName := fFileName;
+    MediaPlayer.Open;
+    MediaPlayer.Play;
+    btnStop.Visible := True;
 
   finally
     if Assigned(Self.Parent) then

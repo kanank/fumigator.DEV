@@ -35,6 +35,7 @@ inherited frmWorker: TfrmWorker
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
+      ExplicitHeight = 43
     end
     inherited Exit_bnt: TRzButton
       Left = 883
@@ -47,6 +48,9 @@ inherited frmWorker: TfrmWorker
       OnClick = Exit_bntClick
       ExplicitLeft = 883
       ExplicitTop = 3
+    end
+    inherited btnTransferCall: TRzButton
+      TabOrder = 2
     end
     object FullForm_btn: TRzButton
       Left = 36
@@ -90,7 +94,6 @@ inherited frmWorker: TfrmWorker
     TabOrder = 1
     TabStyle = tsBackSlant
     TextColors.Selected = 8224125
-    ExplicitHeight = 405
     FixedDimension = 24
     object Short_Tab: TRzTabSheet
       Margins.Left = 4
@@ -105,7 +108,6 @@ inherited frmWorker: TfrmWorker
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 379
       inline _FramePersonSmall: TFramePersonSmallFoto
         Left = -1
         Top = 11
@@ -552,7 +554,6 @@ inherited frmWorker: TfrmWorker
       Margins.Right = 4
       Margins.Bottom = 4
       Caption = #1056#1072#1089#1096#1080#1088#1077#1085#1085#1072#1103' '#1092#1086#1088#1084#1072
-      ExplicitHeight = 379
       object RzPanel3: TRzPanel
         Left = 0
         Top = 335
@@ -566,7 +567,6 @@ inherited frmWorker: TfrmWorker
         BorderOuter = fsBump
         BorderSides = [sdTop, sdBottom]
         TabOrder = 0
-        ExplicitTop = 326
         DesignSize = (
           1067
           53)
@@ -629,7 +629,6 @@ inherited frmWorker: TfrmWorker
         Align = alClient
         BorderOuter = fsNone
         TabOrder = 1
-        ExplicitHeight = 326
         object Label25: TLabel
           Left = 8
           Top = 30
@@ -757,7 +756,7 @@ inherited frmWorker: TfrmWorker
               ExplicitHeight = 18
             end
             inherited Label8: TLabel
-              Left = 695
+              Left = 699
               Top = 11
               Width = 107
               Height = 18
@@ -766,7 +765,7 @@ inherited frmWorker: TfrmWorker
               Margins.Right = 4
               Margins.Bottom = 4
               Font.Height = -15
-              ExplicitLeft = 695
+              ExplicitLeft = 699
               ExplicitTop = 11
               ExplicitWidth = 107
               ExplicitHeight = 18
@@ -874,13 +873,13 @@ inherited frmWorker: TfrmWorker
               Width = 106
             end
             inherited edtSurName: TcxDBTextEdit
-              Left = 534
+              Left = 524
               Top = 7
               Margins.Left = 4
               Margins.Top = 4
               Margins.Right = 4
               Margins.Bottom = 4
-              ExplicitLeft = 534
+              ExplicitLeft = 524
               ExplicitTop = 7
               ExplicitWidth = 167
               ExplicitHeight = 26
@@ -1352,9 +1351,9 @@ inherited frmWorker: TfrmWorker
         end
         object RzPanel6: TRzPanel
           Left = 598
-          Top = 276
+          Top = 279
           Width = 460
-          Height = 38
+          Height = 55
           Margins.Left = 4
           Margins.Top = 4
           Margins.Right = 4
@@ -1363,7 +1362,7 @@ inherited frmWorker: TfrmWorker
           TabOrder = 2
           object Label1: TLabel
             Left = 8
-            Top = 11
+            Top = 3
             Width = 40
             Height = 18
             Margins.Left = 4
@@ -1380,8 +1379,8 @@ inherited frmWorker: TfrmWorker
             ParentFont = False
           end
           object Label2: TLabel
-            Left = 241
-            Top = 11
+            Left = 8
+            Top = 32
             Width = 50
             Height = 18
             Margins.Left = 4
@@ -1396,9 +1395,26 @@ inherited frmWorker: TfrmWorker
             Font.Style = []
             ParentFont = False
           end
+          object Label4: TLabel
+            Left = 243
+            Top = 7
+            Width = 129
+            Height = 18
+            Margins.Left = 4
+            Margins.Top = 4
+            Margins.Right = 4
+            Margins.Bottom = 4
+            Caption = #1058#1080#1087' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clBlack
+            Font.Height = -15
+            Font.Name = 'Tahoma'
+            Font.Style = []
+            ParentFont = False
+          end
           object cxDBTextEdit2: TcxDBTextEdit
-            Left = 302
-            Top = 8
+            Left = 66
+            Top = 29
             Margins.Left = 4
             Margins.Top = 4
             Margins.Right = 4
@@ -1421,8 +1437,8 @@ inherited frmWorker: TfrmWorker
             Width = 152
           end
           object cxDBTextEdit1: TcxDBTextEdit
-            Left = 58
-            Top = 8
+            Left = 66
+            Top = 1
             Margins.Left = 4
             Margins.Top = 4
             Margins.Right = 4
@@ -1445,6 +1461,27 @@ inherited frmWorker: TfrmWorker
             StyleHot.LookAndFeel.NativeStyle = True
             TabOrder = 0
             Width = 152
+          end
+          object cmbUserType: TcxDBLookupComboBox
+            Left = 243
+            Top = 26
+            Margins.Left = 6
+            Margins.Top = 6
+            Margins.Right = 6
+            Margins.Bottom = 6
+            DataBinding.DataField = 'USER_TYPE_DEF'
+            DataBinding.DataSource = DS
+            Properties.KeyFieldNames = 'ID'
+            Properties.ListColumns = <
+              item
+                FieldName = 'NAME'
+              end>
+            Properties.ListOptions.GridLines = glNone
+            Properties.ListOptions.ShowHeader = False
+            Properties.ListSource = DataModuleMain.DSDicUserTypes
+            Properties.ReadOnly = False
+            TabOrder = 2
+            Width = 207
           end
         end
         object RzPanel2: TRzPanel

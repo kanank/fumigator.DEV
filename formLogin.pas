@@ -23,6 +23,7 @@ type
     procedure btnOKClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
 
   private
     fShowNewVersion: Boolean;
@@ -85,8 +86,9 @@ end;
 
 procedure TfrmLogin.FormActivate(Sender: TObject);
 begin
-  Shape1.Height := self.Height;
-  Shape1.Width := self.Width;
+  //Shape1.Height := self.Height;
+  //Shape1.Width := self.Width;
+  frmLogo.Hide;
 
   if not DM.DB.Connected then
   begin
@@ -108,6 +110,11 @@ begin
     Edt2.SetFocus;
 end;
 
+
+procedure TfrmLogin.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  frmLogo.Show;
+end;
 
 procedure TfrmLogin.FormCreate(Sender: TObject);
 begin

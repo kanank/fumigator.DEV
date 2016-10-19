@@ -124,7 +124,7 @@ begin
         Query.Edit;
       Query.FieldByName('type').AsInteger := typePhone;
     end;
-    if DM.isModifiedData(Query) then
+    if Query.State <> dsBrowse then
       Query.post;
 
     Query.Next;

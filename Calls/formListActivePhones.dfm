@@ -3,6 +3,7 @@ inherited frmListActivePhones: TfrmListActivePhones
   Caption = #1042#1099#1073#1077#1088#1080#1090#1077' '#1072#1073#1086#1085#1077#1085#1090#1072
   ClientHeight = 282
   ClientWidth = 229
+  FormStyle = fsStayOnTop
   Position = poDesktopCenter
   ExplicitWidth = 245
   ExplicitHeight = 320
@@ -11,21 +12,28 @@ inherited frmListActivePhones: TfrmListActivePhones
   inherited img1: TImage
     Left = 219
     Top = -76
+    ExplicitLeft = 219
+    ExplicitTop = -76
   end
   inherited RzPanel1: TRzPanel
     Top = 246
     Width = 229
     Height = 36
-    ExplicitTop = 323
+    ExplicitTop = 246
     ExplicitWidth = 229
     ExplicitHeight = 36
     inherited Image2: TImage
       Height = 32
       Visible = False
       ExplicitTop = 2
+      ExplicitHeight = 32
     end
     inherited Exit_bnt: TRzButton
       Left = 290
+      ExplicitLeft = 290
+    end
+    inherited btnTransferCall: TRzButton
+      TabOrder = 3
     end
     object RzButton1: TRzButton
       Left = 4
@@ -65,9 +73,6 @@ inherited frmListActivePhones: TfrmListActivePhones
     Font.Style = []
     ParentFont = False
     TabOrder = 1
-    ExplicitTop = 1
-    ExplicitWidth = 294
-    ExplicitHeight = 165
     object gridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DS

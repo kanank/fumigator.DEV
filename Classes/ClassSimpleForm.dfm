@@ -1,6 +1,7 @@
 inherited SimpleForm: TSimpleForm
   Caption = 'SimpleForm'
   ClientHeight = 351
+  ExplicitWidth = 657
   ExplicitHeight = 389
   DesignSize = (
     641
@@ -197,6 +198,31 @@ inherited SimpleForm: TSimpleForm
       ParentFont = False
       TabOrder = 0
       ThemeAware = False
+    end
+    object btnTransferCall: TRzButton
+      Left = 193
+      Top = 5
+      Width = 146
+      Height = 41
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Anchors = [akTop, akRight]
+      Caption = #1055#1077#1088#1077#1074#1077#1089#1090#1080' '#1074#1099#1079#1086#1074
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 2960640
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      HotTrack = True
+      HotTrackColor = 16625984
+      ParentFont = False
+      TabOrder = 1
+      ThemeAware = False
+      Visible = False
+      OnClick = btnTransferCallClick
     end
   end
 end

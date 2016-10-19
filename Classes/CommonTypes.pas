@@ -20,68 +20,6 @@ type TTrayView =(trayNormal, trayMissed);
 type TActionStr = (asCreate,asEdit,asShow);
 
 type
-  TCallInfo = class
-  public
-    CallFlow: string;
-    CallId: string;
-    CallApiId: string;
-    Phone:  string;
-    ClientId: Integer;
-    ClientType: string;
-    ClientSubType: string;
-    CallResult: string;
-    procedure Clear;
-    procedure Assign(ASource: TCallInfo);
-end;
-
-type
-  TCallProto = class
-  private
-    fCallInfo: TCallInfo;
-    fOnStartCall: TNotifyEvent;
-    fOnFinishCall: TNotifyEvent;
-    fOnAcceptCall: TNotifyEvent;
-    fOnTransferCall: TNotifyEvent;
-    fOnCheckTimer: TNotifyEvent;
-    fActive: Boolean; //идет звонок
-    fReady: Boolean;  // готов к звонку
-    fAccepted: Boolean; //принят звонок
-    fTransfered: Boolean; // звонок переведен
-    fTimer: TTimer;
-    procedure SetActive(AValue: boolean);
-    procedure SetReady(AValue: boolean);
-    function  GetAccepted: Boolean;
-    procedure SetAccepted(AValue: boolean);
-    function  GetCanceled: Boolean;
-    procedure OnTimerProc(Sender: TObject);
-    procedure DoCheckCall;
-    procedure SetTransfered(const AValue: Boolean);
-  protected
-
-  public
-    property Active: Boolean read fActive write SetActive;
-    property Ready: Boolean read fReady write SetReady;
-    property Accepted: Boolean read GetAccepted write SetAccepted;
-    property Transfered: Boolean read fTransfered write SetTransfered;
-    property Cancelled: Boolean read GetCanceled;
-    property CallInfo: TCallInfo read fCallInfo;
-    property OnStartCall: TNotifyEvent read fOnStartCall write fOnStartCall;
-    property OnFinishCall: TNotifyEvent read fOnFinishCall write fOnFinishCall;
-    property OnAcceptCall: TNotifyEvent read fOnAcceptCall write fOnAcceptCall;
-    property OnTransferCall: TNotifyEvent read fOnTransferCall write fOnTransferCall;
-    property OnCheckTimer: TNotifyEvent read fOnCheckTimer write fOnCheckTimer;
-    constructor Create; overload;
-    destructor Destroy; overload;
-    procedure StartCall(ACallFlow, ACallId, ACallApiId, APhone, AClientId, AClientType: string);overload;
-    procedure StartCall(ACallInfo: TCallInfo); overload;
-
-    procedure FinishCall(ACallResult: string);
-    procedure AcceptCall(ACallId: string);
-    procedure TransferCall; virtual;
-
-end;
-
-type
   CurrentUserRec = record
   ID: Integer;
   UserName :string;
@@ -175,23 +113,23 @@ end;
 //  end;
 
 function NewFrmCreateParam(AAction: TActionstr; ADataSet: TDataSet=nil; AExtParam: PClientParam=nil): TFrmCreateParam;
-procedure PostMessageToAll(AMsg: CArdinal);
+procedure PostMessageToAll(AMsg: CArdinal; AWParam: integer = 0; ALParam:integer = 0);
 
  implementation
 
 function NewFrmCreateParam(AAction: TActionstr; ADataSet: TDataSet=nil; AExtParam: PClientParam=nil): TFrmCreateParam;
 begin
-  Result.action := AAction;
-  Result.Dataset := ADataSet;
+  Result.action   := AAction;
+  Result.Dataset  := ADataSet;
   Result.ExtParam := AExtParam;
 end;
 
-procedure PostMessageToAll(AMsg: Cardinal);
+procedure PostMessageToAll(AMsg: CArdinal; AWParam: integer = 0; ALParam:integer = 0);
 var
   i: Integer;
 begin
   for I := 0 to Screen.FormCount - 1 do
-    PostMessage(Screen.Forms[i].Handle, AMsg, 0, 0);
+    PostMessage(Screen.Forms[i].Handle, AMsg, AWParam, ALParam);
 end;
 
 { ClientCallParams }
@@ -217,18 +155,18 @@ end;
 
 procedure ClientCallParams.Setup;
 begin
-  id_call := 0;
-  Client_Type := '';
-  Client_id := 0;
-  TelNum := '';
-  ClientName := '';
-  Format_Id := 1;
-  Status_Id := 1;
-  PERSON_ID := 0;
-  FORMA_ID := 1;
-  INN := '';
+  id_call       := 0;
+  Client_Type   := '';
+  Client_id     := 0;
+  TelNum        := '';
+  ClientName    := '';
+  Format_Id     := 1;
+  Status_Id     := 1;
+  PERSON_ID     := 0;
+  FORMA_ID      := 1;
+  INN           := '';
   clientContact := '';
-  Author := '';
+  Author        := '';
 end;
 
 { TClientParam }
@@ -257,183 +195,6 @@ begin
   Self.ExtParam := AExtParam;
 end;
 
-{ TCallPcroto }
-procedure TCallProto.AcceptCall(ACallId: string);
-begin
-  if ACallId <> Self.CallInfo.CallId then
-    Exit;
-
-end;
-
-constructor TCallProto.Create;
-begin
-  inherited Create;
-  fCallInfo := TCallInfo.Create;
-  //fTimer := TTimer.Create;
-  //fTimer.Enabled  := False;
-  //fTimer.Interval := 1000;
-  //fTimer.OnTimer  := onTimerProc;
-  fReady := True;
-end;
-
-destructor TCallProto.Destroy;
-begin
-  fCallInfo.Free;
-  //fTimer.Free;
-  inherited;
-end;
-
-procedure TCallProto.DoCheckCall;
-begin
-
-end;
-
-procedure TCallProto.FinishCall(ACallResult: string);
-begin
-  CallInfo.CallResult := ACallResult;
-  fActive := false;
-
-  if Assigned(fOnFinishCall) then
-    fOnFinishCall(Self);
-
-  PostMessageToAll(WM_FINISHCALL);
-end;
-
-function TCallProto.GetAccepted: Boolean;
-begin
-  Result := (CallInfo.CallFlow = 'in') and fAccepted;
-    //(CallInfo.CallResult = 'ANSWER');
-end;
-
-function TCallProto.GetCanceled: Boolean;
-begin
-  Result := (CallInfo.CallResult = 'CANCEL');
-end;
-
-procedure TCallProto.OnTimerProc(Sender: TObject);
-begin
-  if Assigned(fOnCheckTimer) then
-    fOnCheckTimer(self);
-end;
-
-procedure TCallProto.SetAccepted(AValue: boolean);
-begin
-  if AValue <> fAccepted then
-    fAccepted := AValue;
-
-  if AValue then
-  begin
-    if Assigned(fOnAcceptCall) then
-      fOnAcceptCall(self);
-      PostMessageToAll(WM_ACCEPTCALL);
-  end;
-
-end;
-
-procedure TCallProto.SetActive(AValue: boolean);
-begin
-  if AValue <> fActive then
-  begin
-    fActive := AValue;
-    if not AValue then
-      fCallInfo.Clear;
-  end;
-end;
-
-procedure TCallProto.SetReady(AValue: boolean);
-begin
-  if AValue <> fReady then
-  begin
-    fReady := AValue;
-  end;
-end;
-
-procedure TCallProto.SetTransfered(const AValue: boolean);
-begin
-  if Avalue <> AValue then
-    fTransfered := AValue;
-
-  if fTransfered then
-    PostMessageToAll(WM_TRANSFERCALL);
-end;
-
-procedure TCallProto.StartCall(ACallInfo: TCallInfo);
-begin
-  StartCall(ACallInfo.CallFlow, ACallInfo.CallId, ACallInfo.CallApiId,
-    ACallInfo.Phone, IntToStr(ACallInfo.ClientId), ACallInfo.ClientType);
-end;
-
-procedure TCallProto.TransferCall;
-var
-  i: Integer;
-begin
-  if Assigned(fOnTransferCall) then
-    fOnTransferCall(Self);
-
-  i := 0;
-  while i < 20 do
-  begin
-    if not fActive then
-      Break;
-
-    Sleep(250);
-    Application.ProcessMessages;
-    Inc(i);
-  end;
-
-  if i < 20 then
-    Transfered := True;
-end;
-
-procedure TCallProto.StartCall(ACallFlow, ACallId, ACallApiId, APhone, AClientId, AClientType: string);
-begin
-  if CallInfo <> nil then
-
-  with fCallInfo do
-  begin
-    CallId     := ACallId;
-    CallApiId  := ACallApiId;
-    CallFlow   := ACallFlow;
-    Phone      := APhone;
-    ClientId   := StrToInt(AClientId);
-    ClientType := AClientType;
-    CallResult :='';
-    Accepted   := false;
-  end;
-
-  fActive := True;
-  fReady  := False;
-
-  //PostMessage()
-  //ftimer.Enabled := true;
-
-  if Assigned(fOnStartCall) then
-    fOnStartCall(Self);
-
-  PostMessageToAll(WM_STARTCALL);
-end;
-
-{ TCallInfo }
-
-procedure TCallInfo.Assign(ASource: TCallInfo);
-begin
-    CallId     := ASource.CallId;
-    CallApiId  := ASource.CallApiId;
-    CallFlow   := ASource.CallFlow;
-    ClientId   := ASource.ClientId;
-    ClientType := ASource.ClientType;
-    ClientSubType := ASource.ClientSubType;
-end;
-
-procedure TCallInfo.Clear;
-begin
-  CallId := '';
-  CallApiId := '';
-  CallFlow := '';
-  ClientId := -1;
-  ClientType := '';
-  ClientSubType := '';
-end;
 
 { TIBQueryFilt }
 
@@ -470,5 +231,6 @@ end;
 //   //inherited SetFiltered(Value);
 //   fFiltered := Value;
 //end;
+
 
 end.

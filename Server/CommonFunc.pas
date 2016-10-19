@@ -3,7 +3,7 @@ unit CommonFunc;
 interface
 
 uses
-   Windows;
+   Windows, DB;
 
 function FileVersion ( fName : string ) : string;
 procedure DecodeVersion(const AVersion: string; var Major, Minor, Release, Build: integer);
@@ -12,6 +12,8 @@ function UrlDecode(Str: Ansistring): Ansistring;
 function LockMutex(AHandle: THandle; ATimeout: integer): Boolean;
 function UnlockMutex(AHandle: THandle): boolean;
 function GetFileSize(FileName: String): Integer;
+function CopyRecord(ASource, ADest: TDataset): boolean;
+function FindFieldVisible(ADataset: TDataSet; AFieldName: string): TField;
 
 implementation
 uses
@@ -267,6 +269,51 @@ begin
   finally
 
   end;
+end;
+
+function CopyRecord(ASource, ADest: TDataset): boolean;
+var
+ i: Integer;
+ fld: TField;
+begin
+  if not (ADest.State in [dsEdit, dsInsert]) then
+    ADest.Edit;
+  try
+  try
+    for i := 0 to ASource.FieldCount - 1 do
+    begin
+      //ADest.FieldByName(ASource.Fields[i].FieldName).Value :=
+      fld := FindFieldVisible(ADest, ASource.Fields[i].FieldName);
+      if fld <> nil then
+        fld.Value := ASource.Fields[i].Value;
+    end;
+  except
+    raise Exception.Create('Ошибка копирования записи');
+  end;
+  finally
+    if ADest.State in [dsEdit, dsInsert] then
+      ADest.Post;
+  end;
+  
+end;
+
+function FindFieldVisible(ADataset: TDataSet; AFieldName: string): TField;
+var
+  i: Integer;
+begin
+  Result := nil;
+  for i := 0 to ADataset.FieldCount - 1 do
+  begin
+    if (LowerCase(ADataset.Fields[i].FieldName) = LowerCase(AFieldName)) and
+        (ADataset.Fields[i].Visible) then
+    begin
+      Result := ADataset.Fields[i];
+      Break;
+    end
+    else
+      Continue;
+  end;
+    
 end;
 
 end.

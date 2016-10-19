@@ -100,6 +100,15 @@ inherited frmSmallCardUr: TfrmSmallCardUr
       ExplicitLeft = 615
       ExplicitTop = 6
     end
+    inherited btnTransferCall: TRzButton
+      Left = 353
+      Top = 6
+      Height = 40
+      Visible = True
+      ExplicitLeft = 353
+      ExplicitTop = 6
+      ExplicitHeight = 40
+    end
     inherited RzBitBtn1: TRzBitBtn
       Top = 6
       Margins.Left = 6
@@ -126,14 +135,14 @@ inherited frmSmallCardUr: TfrmSmallCardUr
   end
   inherited cxDBLookupComboBox3: TcxDBLookupComboBox
     Left = 238
-    Top = 275
+    Top = 282
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
     DataBinding.DataSource = frmClientUr.DS
     ExplicitLeft = 238
-    ExplicitTop = 275
+    ExplicitTop = 282
     ExplicitHeight = 26
   end
   inherited edtPhone: TcxMaskEdit
