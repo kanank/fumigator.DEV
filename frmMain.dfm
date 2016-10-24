@@ -20,11 +20,12 @@ inherited frmMain: TfrmMain
     ExplicitHeight = 81
   end
   object lblSocket: TLabel
-    Left = 435
+    Left = 477
     Top = 0
     Width = 203
     Height = 13
     Alignment = taRightJustify
+    Anchors = [akTop, akRight]
     Caption = #1057#1086#1077#1076#1080#1085#1077#1085#1080#1077' '#1089' '#1089#1077#1088#1074#1077#1088#1086#1084' '#1085#1077' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1086
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlue
@@ -154,7 +155,6 @@ inherited frmMain: TfrmMain
     Visible = False
     OnClick = RzMenuButton2Click
     ShowArrow = False
-    ExplicitWidth = 87
   end
   object RzMenuButton3: TRzMenuButton
     Left = 205
@@ -290,7 +290,9 @@ inherited frmMain: TfrmMain
     Left = 576
     Top = 136
   end
-  object Timer1: TTimer
+  object TimerEcho: TTimer
+    Interval = 60000
+    OnTimer = TimerEchoTimer
     Left = 400
     Top = 136
   end

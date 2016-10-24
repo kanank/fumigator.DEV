@@ -1235,6 +1235,11 @@ begin
         Application.Terminate
 
       else
+
+      if cmd = 'checkconnect' then
+         AContext.Connection.IOHandler.WriteLn('#echo:')
+
+      else
         SocketCommand(AContext, cmd, arg);
 
     end;
