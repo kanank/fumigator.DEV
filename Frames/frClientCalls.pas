@@ -37,6 +37,7 @@ type
       Sender: TcxCustomGridTableView; APrevFocusedRecord,
       AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
+    procedure QueryBeforeOpen(DataSet: TDataSet);
   private
     fPlay: TfrmRecordPlay;
     fInQuery: Boolean;
@@ -133,7 +134,17 @@ begin
     inherited OpenData(AId);
   finally
     fInQuery := False;
+    if Query.RecordCount > 0  then
+      GridViewFocusedRecordChanged(GridView, GridView.ViewData.Rows[0],
+        GridView.ViewData.Rows[0], True);
   end;
+end;
+
+procedure TframeClientCalls.QueryBeforeOpen(DataSet: TDataSet);
+begin
+  if Query.ParamByName('client_id').AsInteger <= 0 then
+       Query.ParamByName('client_id').AsInteger := -11111111;
+
 end;
 
 end.

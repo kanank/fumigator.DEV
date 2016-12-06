@@ -4,7 +4,6 @@ inherited frmMain: TfrmMain
   OnClose = FormClose
   OnCreate = FormCreate
   ExplicitWidth = 704
-  ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 18
   inherited img1: TImage
@@ -152,7 +151,6 @@ inherited frmMain: TfrmMain
     ParentFont = False
     TabOrder = 4
     ThemeAware = False
-    Visible = False
     OnClick = RzMenuButton2Click
     ShowArrow = False
   end
@@ -291,7 +289,7 @@ inherited frmMain: TfrmMain
     Top = 136
   end
   object TimerEcho: TTimer
-    Interval = 60000
+    Interval = 120000
     OnTimer = TimerEchoTimer
     Left = 400
     Top = 136
@@ -302,7 +300,7 @@ inherited frmMain: TfrmMain
   end
   object TimerCheck: TTimer
     Enabled = False
-    Interval = 2000
+    Interval = 60000
     OnTimer = TimerCheckTimer
     Left = 456
     Top = 136
@@ -312,6 +310,12 @@ inherited frmMain: TfrmMain
     Interval = 120000
     OnTimer = TimerUpdateTimer
     Left = 512
+    Top = 136
+  end
+  object TimerDB: TTimer
+    Interval = 120000
+    OnTimer = TimerDBTimer
+    Left = 328
     Top = 136
   end
 end

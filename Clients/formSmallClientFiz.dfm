@@ -136,24 +136,22 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
       ExplicitTop = 6
     end
   end
-  inherited cxDBLookupComboBox2: TcxDBLookupComboBox
+  inherited cmbArea: TcxDBLookupComboBox
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
-    DataBinding.DataSource = frmClientFiz.DS
+    Properties.ValidationOptions = [evoShowErrorIcon]
     TabOrder = 3
-    ExplicitHeight = 26
   end
-  inherited cxDBLookupComboBox3: TcxDBLookupComboBox
+  inherited cmbAreaUnit: TcxDBLookupComboBox
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
-    DataBinding.DataSource = frmClientFiz.DS
+    Properties.ValidationOptions = [evoShowErrorIcon]
     TabOrder = 4
     ExplicitWidth = 94
-    ExplicitHeight = 26
     Width = 94
   end
   inherited edtPhone: TcxMaskEdit
@@ -178,6 +176,8 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
     Anchors = [akLeft, akTop, akRight]
     BeepOnEnter = False
     DataBinding.DataField = 'NAME'
+    Properties.ValidationOptions = [evoShowErrorIcon]
+    Properties.OnValidate = edtNamePropertiesValidate
     Style.BorderStyle = ebsFlat
     Style.HotTrack = False
     Style.LookAndFeel.Kind = lfFlat
@@ -199,12 +199,10 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
-    DataBinding.DataSource = frmClientFiz.DS
     TabOrder = 2
     ExplicitLeft = 415
     ExplicitTop = 10
     ExplicitWidth = 207
-    ExplicitHeight = 26
     Width = 207
   end
   inherited FrameUslugi: TFrameUslugi
@@ -241,6 +239,7 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
         ExplicitHeight = 83
         inherited grdPhoneDBTableView1: TcxGridDBTableView
           inherited grdPhoneDBTableView1Column1: TcxGridDBColumn
+            Properties.ValidationOptions = [evoShowErrorIcon]
             IsCaptionAssigned = True
           end
         end
@@ -255,6 +254,7 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
         ExplicitTop = 105
         ExplicitWidth = 266
         inherited btnAdd: TRzBitBtn
+          Width = 38
           Height = 34
           Margins.Left = 6
           Margins.Top = 6
@@ -262,10 +262,12 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
           Margins.Bottom = 6
           Margin = 4
           Spacing = 8
+          ExplicitWidth = 38
           ExplicitHeight = 34
         end
         inherited btnEdit: TRzBitBtn
           Top = 0
+          Width = 38
           Height = 35
           Margins.Left = 6
           Margins.Top = 6
@@ -274,6 +276,7 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
           Margin = 4
           Spacing = 8
           ExplicitTop = 0
+          ExplicitWidth = 38
           ExplicitHeight = 35
         end
         inherited btnDel: TRzBitBtn
@@ -302,16 +305,16 @@ inherited frmSmallCardFiz: TfrmSmallCardFiz
       Top = 43
     end
   end
-  inherited cxDBMemo1: TcxDBMemo
-    Left = 350
-    Top = 223
+  inherited edtGoods: TcxDBMemo
+    Left = 351
+    Top = 227
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
-    DataBinding.DataSource = frmClientFiz.DS
-    ExplicitLeft = 350
-    ExplicitTop = 223
+    Properties.ValidationOptions = [evoShowErrorIcon]
+    ExplicitLeft = 351
+    ExplicitTop = 227
     ExplicitWidth = 272
     ExplicitHeight = 71
     Height = 71

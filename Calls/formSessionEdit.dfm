@@ -46,6 +46,9 @@ inherited frmSessionEdit: TfrmSessionEdit
       Margins.Bottom = 6
       ExplicitLeft = 1161
     end
+    inherited btnTransferCall: TRzButton
+      TabOrder = 3
+    end
     object RzButton1: TRzButton
       Left = 846
       Top = 5
@@ -92,6 +95,13 @@ inherited frmSessionEdit: TfrmSessionEdit
       ThemeAware = False
       OnClick = btnClientEditClick
     end
+    object RzPanel2: TRzPanel
+      Left = 88
+      Top = -512
+      Width = 185
+      Height = 41
+      TabOrder = 4
+    end
   end
   object ScrollBox: TScrollBox
     Left = 0
@@ -103,31 +113,28 @@ inherited frmSessionEdit: TfrmSessionEdit
     AutoSize = True
     BevelInner = bvNone
     TabOrder = 1
-    ExplicitWidth = 1029
-    ExplicitHeight = 545
-    DesignSize = (
-      1023
-      546)
     object pnlCalls: TRzPanel
       Left = 0
-      Top = 328
-      Width = 1025
+      Top = 333
+      Width = 1023
       Height = 213
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
       Margins.Bottom = 4
+      Align = alBottom
       BorderOuter = fsNone
       TabOrder = 0
       inline frameClientCalls: TframeClientCalls
-        Left = -3
+        Left = 0
         Top = 0
-        Width = 1059
-        Height = 209
+        Width = 1023
+        Height = 213
         Margins.Left = 4
         Margins.Top = 4
         Margins.Right = 4
         Margins.Bottom = 4
+        Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -15
@@ -135,18 +142,19 @@ inherited frmSessionEdit: TfrmSessionEdit
         Font.Style = []
         ParentFont = False
         TabOrder = 0
-        ExplicitLeft = -3
-        ExplicitWidth = 1059
-        ExplicitHeight = 209
+        ExplicitWidth = 1023
+        ExplicitHeight = 213
         inherited grpPhone: TRzGroupBox
-          Top = 10
+          Left = 0
+          Top = 8
           Width = 1058
           Height = 209
           Margins.Left = 4
           Margins.Top = 4
           Margins.Right = 4
           Margins.Bottom = 4
-          ExplicitTop = 10
+          ExplicitLeft = 0
+          ExplicitTop = 8
           ExplicitWidth = 1058
           ExplicitHeight = 209
           inherited RzPanel2: TRzPanel
@@ -213,7 +221,7 @@ inherited frmSessionEdit: TfrmSessionEdit
             Left = 7
             Top = 24
             Width = 1052
-            Height = 191
+            Height = 180
             Margins.Left = 4
             Margins.Top = 4
             Margins.Right = 4
@@ -222,7 +230,7 @@ inherited frmSessionEdit: TfrmSessionEdit
             ExplicitLeft = 7
             ExplicitTop = 24
             ExplicitWidth = 1052
-            ExplicitHeight = 191
+            ExplicitHeight = 180
             inherited GridView: TcxGridDBTableView
               inherited GridViewColumn1: TcxGridDBColumn
                 Width = 93
@@ -264,37 +272,48 @@ inherited frmSessionEdit: TfrmSessionEdit
         end
       end
     end
-    object pnlClient: TRzPanel
-      Left = 0
-      Top = 224
-      Width = 1021
-      Height = 117
-      Margins.Left = 4
-      Margins.Top = 4
-      Margins.Right = 4
-      Margins.Bottom = 4
-      Anchors = [akLeft, akTop, akRight]
-      AutoSize = True
-      BorderOuter = fsFlat
-      BorderSides = [sdBottom]
-      TabOrder = 1
-      ExplicitWidth = 1023
-    end
-    object pnlResult: TRzPanel
+    object pnlClientResult: TRzPanel
       Left = 0
       Top = 0
       Width = 1023
-      Height = 226
-      Margins.Left = 4
-      Margins.Top = 4
-      Margins.Right = 4
-      Margins.Bottom = 4
-      Align = alTop
-      BorderOuter = fsFlat
+      Height = 333
+      Align = alClient
+      AutoSize = True
+      BorderOuter = fsPopup
       BorderSides = [sdBottom]
-      TabOrder = 2
-      ExplicitLeft = -32
-      ExplicitTop = -72
+      TabOrder = 1
+      object pnlClient: TScrollBox
+        Left = 305
+        Top = 0
+        Width = 718
+        Height = 332
+        Align = alClient
+        Anchors = []
+        AutoScroll = False
+        BevelEdges = []
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Ctl3D = False
+        ParentCtl3D = False
+        TabOrder = 0
+        OnResize = pnlClientResize
+      end
+      object pnlResult: TRzPanel
+        Left = 0
+        Top = 0
+        Width = 305
+        Height = 332
+        Margins.Left = 4
+        Margins.Top = 4
+        Margins.Right = 4
+        Margins.Bottom = 4
+        Align = alLeft
+        BorderOuter = fsFlat
+        BorderSides = [sdRight]
+        TabOrder = 1
+        OnResize = pnlClientResize
+      end
     end
   end
 end

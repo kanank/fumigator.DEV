@@ -1,17 +1,15 @@
 inherited frmClients: TfrmClients
   Caption = #1050#1083#1080#1077#1085#1090#1099
   ClientHeight = 602
-  ClientWidth = 1277
+  ClientWidth = 1255
   Position = poDesktopCenter
   OnShow = FormShow
-  ExplicitLeft = -372
-  ExplicitTop = -120
-  ExplicitWidth = 1293
+  ExplicitWidth = 1271
   ExplicitHeight = 640
   PixelsPerInch = 96
   TextHeight = 18
   inherited img1: TImage
-    Left = 1009
+    Left = 987
     Top = 458
     Margins.Left = 6
     Margins.Top = 6
@@ -22,7 +20,7 @@ inherited frmClients: TfrmClients
     ExplicitTop = 458
   end
   inherited RzPanel2: TRzPanel
-    Width = 1277
+    Width = 1255
     Height = 42
     Margins.Left = 6
     Margins.Top = 6
@@ -31,7 +29,7 @@ inherited frmClients: TfrmClients
     ExplicitWidth = 1277
     ExplicitHeight = 42
     inherited Image1: TImage
-      Left = 126
+      Left = 104
       Top = 1
       Margins.Left = 6
       Margins.Top = 6
@@ -41,7 +39,7 @@ inherited frmClients: TfrmClients
       ExplicitTop = 1
     end
     object Fiz_btn: TRzButton
-      Left = 899
+      Left = 877
       Top = 1
       Width = 180
       Height = 38
@@ -66,9 +64,10 @@ inherited frmClients: TfrmClients
       TabOrder = 0
       ThemeAware = False
       OnClick = Fiz_btnClick
+      ExplicitLeft = 899
     end
     object Ur_btn: TRzButton
-      Left = 1087
+      Left = 1065
       Top = 1
       Width = 180
       Height = 38
@@ -96,9 +95,10 @@ inherited frmClients: TfrmClients
       TabOrder = 1
       ThemeAware = False
       OnClick = Ur_btnClick
+      ExplicitLeft = 1087
     end
     object btnAll: TRzButton
-      Left = 688
+      Left = 666
       Top = 1
       Width = 180
       Height = 38
@@ -123,6 +123,7 @@ inherited frmClients: TfrmClients
       TabOrder = 2
       ThemeAware = False
       OnClick = btnAllClick
+      ExplicitLeft = 688
     end
     object chkDeleted: TcxCheckBox
       Left = 448
@@ -136,7 +137,7 @@ inherited frmClients: TfrmClients
   end
   inherited RzPanel1: TRzPanel
     Top = 534
-    Width = 1277
+    Width = 1255
     Margins.Left = 6
     Margins.Top = 6
     Margins.Right = 6
@@ -144,7 +145,7 @@ inherited frmClients: TfrmClients
     ExplicitTop = 534
     ExplicitWidth = 1277
     inherited Cancel_btn: TRzButton
-      Left = 1087
+      Left = 1065
       Margins.Left = 6
       Margins.Top = 6
       Margins.Right = 6
@@ -227,7 +228,7 @@ inherited frmClients: TfrmClients
     end
     object Edit_btn_mnu: TRzMenuButton
       Left = 212
-      Top = 9
+      Top = 8
       Width = 167
       Height = 42
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -246,10 +247,32 @@ inherited frmClients: TfrmClients
       Layout = blGlyphRight
       DropDownMenu = mnuEdit
     end
+    object btnSelect: TRzButton
+      Left = 890
+      Top = 11
+      Width = 168
+      Height = 40
+      Margins.Left = 6
+      Margins.Top = 6
+      Margins.Right = 6
+      Margins.Bottom = 6
+      Caption = #1054#1050
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      HotTrack = True
+      HotTrackColor = 16625984
+      ParentFont = False
+      TabOrder = 7
+      ThemeAware = False
+      OnClick = btnSelectClick
+    end
   end
   inherited Grid: TcxGrid
     Top = 66
-    Width = 1277
+    Width = 1255
     Height = 467
     Margins.Left = 6
     Margins.Top = 6
@@ -318,14 +341,14 @@ inherited frmClients: TfrmClients
       object GridViewColumn4: TcxGridDBColumn
         DataBinding.FieldName = 'Email'
         HeaderAlignmentHorz = taCenter
-        MinWidth = 140
+        MinWidth = 120
         Options.Editing = False
         Options.AutoWidthSizable = False
         Options.GroupFooters = False
         Options.Grouping = False
         Options.HorzSizing = False
         Options.Moving = False
-        Width = 140
+        Width = 120
       end
       object GridViewColumn6: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1074#1099#1087'. '#1079#1072#1103#1074#1086#1082

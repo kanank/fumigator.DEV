@@ -121,7 +121,7 @@ inherited frmSmallCardUr: TfrmSmallCardUr
       ExplicitTop = 6
     end
   end
-  inherited cxDBLookupComboBox2: TcxDBLookupComboBox
+  inherited cmbArea: TcxDBLookupComboBox
     Left = 104
     Top = 282
     Margins.Left = 6
@@ -131,9 +131,8 @@ inherited frmSmallCardUr: TfrmSmallCardUr
     DataBinding.DataSource = frmClientUr.DS
     ExplicitLeft = 104
     ExplicitTop = 282
-    ExplicitHeight = 26
   end
-  inherited cxDBLookupComboBox3: TcxDBLookupComboBox
+  inherited cmbAreaUnit: TcxDBLookupComboBox
     Left = 238
     Top = 282
     Margins.Left = 6
@@ -143,7 +142,6 @@ inherited frmSmallCardUr: TfrmSmallCardUr
     DataBinding.DataSource = frmClientUr.DS
     ExplicitLeft = 238
     ExplicitTop = 282
-    ExplicitHeight = 26
   end
   inherited edtPhone: TcxMaskEdit
     Left = 104
@@ -167,7 +165,6 @@ inherited frmSmallCardUr: TfrmSmallCardUr
     ExplicitLeft = 554
     ExplicitTop = 14
     ExplicitWidth = 227
-    ExplicitHeight = 26
     Width = 227
   end
   inherited FrameUslugi: TFrameUslugi
@@ -245,7 +242,7 @@ inherited frmSmallCardUr: TfrmSmallCardUr
       end
     end
   end
-  inherited cxDBMemo1: TcxDBMemo
+  inherited edtGoods: TcxDBMemo
     Left = 503
     Margins.Left = 6
     Margins.Top = 6

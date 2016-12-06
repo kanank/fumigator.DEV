@@ -1,36 +1,46 @@
 inherited SprForm: TSprForm
   Caption = 'SprForm'
-  ExplicitWidth = 657
-  ExplicitHeight = 396
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 18
   inherited img1: TImage
-    Left = 448
-    Top = 254
-    Width = 185
-    Height = 57
+    Left = 620
+    Top = 352
+    Width = 256
+    Height = 79
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
     Proportional = True
     Stretch = True
-    ExplicitLeft = 448
-    ExplicitTop = 254
-    ExplicitWidth = 185
-    ExplicitHeight = 57
+    ExplicitLeft = 620
+    ExplicitTop = 352
+    ExplicitWidth = 256
+    ExplicitHeight = 79
   end
   object RzPanel2: TRzPanel
     Left = 0
     Top = 0
     Width = 641
-    Height = 33
+    Height = 46
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
     Align = alTop
     TabOrder = 0
     DesignSize = (
       641
-      33)
+      46)
     object Image1: TImage
-      Left = 544
-      Top = 2
-      Width = 90
-      Height = 32
+      Left = 753
+      Top = 3
+      Width = 125
+      Height = 44
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
       Anchors = [akRight, akBottom]
       Picture.Data = {
         0D546478536D617274496D61676589504E470D0A1A0A0000000D494844520000
@@ -157,25 +167,33 @@ inherited SprForm: TSprForm
   end
   object RzPanel1: TRzPanel
     Left = 0
-    Top = 309
+    Top = 290
     Width = 641
-    Height = 49
+    Height = 68
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
     Align = alBottom
     TabOrder = 1
     DesignSize = (
       641
-      49)
+      68)
     object Cancel_btn: TRzButton
-      Left = 505
-      Top = 8
-      Width = 124
-      Height = 29
+      Left = 699
+      Top = 11
+      Width = 172
+      Height = 40
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
       ModalResult = 2
       Anchors = [akTop, akRight]
       Caption = #1047#1072#1082#1088#1099#1090#1100
       Font.Charset = DEFAULT_CHARSET
       Font.Color = 2960640
-      Font.Height = -11
+      Font.Height = -15
       Font.Name = 'Tahoma'
       Font.Style = []
       HotTrack = True
@@ -185,14 +203,18 @@ inherited SprForm: TSprForm
       ThemeAware = False
     end
     object Edit_btn: TRzButton
-      Left = 153
-      Top = 8
-      Width = 121
-      Height = 29
+      Left = 212
+      Top = 11
+      Width = 167
+      Height = 40
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
-      Font.Height = -11
+      Font.Height = -15
       Font.Name = 'Tahoma'
       Font.Style = []
       HotTrack = True
@@ -202,14 +224,18 @@ inherited SprForm: TSprForm
       ThemeAware = False
     end
     object Del_btn: TRzButton
-      Left = 299
-      Top = 8
-      Width = 121
-      Height = 29
+      Left = 414
+      Top = 11
+      Width = 168
+      Height = 40
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
-      Font.Height = -11
+      Font.Height = -15
       Font.Name = 'Tahoma'
       Font.Style = []
       HotTrack = True
@@ -219,14 +245,18 @@ inherited SprForm: TSprForm
       ThemeAware = False
     end
     object Add_btn: TRzButton
-      Left = 9
-      Top = 8
-      Width = 121
-      Height = 29
+      Left = 12
+      Top = 11
+      Width = 168
+      Height = 40
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
       Caption = #1057#1086#1079#1076#1072#1090#1100
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
-      Font.Height = -11
+      Font.Height = -15
       Font.Name = 'Tahoma'
       Font.Style = []
       HotTrack = True
@@ -238,9 +268,13 @@ inherited SprForm: TSprForm
   end
   object Grid: TcxGrid
     Left = 0
-    Top = 32
-    Width = 641
-    Height = 279
+    Top = 44
+    Width = 888
+    Height = 387
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
     TabOrder = 2
     object GridView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>

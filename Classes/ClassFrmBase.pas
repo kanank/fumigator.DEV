@@ -13,6 +13,19 @@ const
 type
   TBooleanFunc = function(Sender: TObject): boolean;
 type
+  TThreadModal = class(TThread)
+    fProc: TNotifyEvent;
+    fStop: Boolean;
+    fForm: TForm;
+  private
+    fActive: Boolean;
+  public
+    property Active: Boolean read fActive;
+    procedure Execute; override;
+    constructor Create(AForm: TForm; AProc: TNotifyEvent); overload;
+  end;
+
+type
   TBaseForm = class(TForm)
     img1: TImage;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -30,7 +43,10 @@ type
     fOnTopMost: Boolean; //находится в режиме TopMost
     fTransfered: Boolean;
     fCallObj: TCallProto;
-
+    fNoDefaultCallEvent: Boolean; //не использовать события звонков по умолчанию
+    fModalThread: TThreadModal;
+    fInLightModal: Boolean; 
+    
     procedure SetCaption(AValue: string); virtual;
     procedure SetNonValidate(Alist: string);
     function Validate(ADataSource: TDataSource): Boolean;
@@ -39,6 +55,7 @@ type
     procedure WmAcceptCall(var Msg: TMessage); message WM_ACCEPTCALL;
     procedure WmTransferCall(var Msg: TMessage); message WM_TRANSFERCALL;
     procedure WMActivateForm(var Msg: TMessage); message WM_ACTIVATE;
+    procedure WmConnectDB(var Msg: TMessage);  message WM_CONNECTDB;
     procedure DoStartCall; virtual;
     procedure DoFinishCall; virtual;
     procedure DoAcceptCall; virtual;
@@ -60,13 +77,16 @@ type
     procedure PostMessageToAll(AMsg: TMessage);
     procedure SetTopMost;
     procedure UnSetTopMost;
+    procedure SetUnSetTopMost(Avalue: Boolean);
+    procedure ShowLightModal(AProc: TNotifyEvent); //мягкий ShowModal с потоком
   published
     property Title: string read fTitle write SetCaption;
     property CloseEnable: Boolean read fCanClose write fCanClose;
     property CloseOnCancelCall: Boolean read fCloseOnCancelCall write fCloseOnCancelCall;
     property HideOnClose: boolean read CalcHideOnClose;
     property InUpdate: Boolean read fInUpdate;
-    property OnTopMost: Boolean read fOnTopMost;
+    property OnTopMost: Boolean read fOnTopMost write SetUnSetTopMost;
+    property NoDefaultCallEvent: Boolean read fNoDefaultCallEvent write fNoDefaultCallEvent;
   end;
 
 implementation
@@ -104,6 +124,7 @@ begin
   fNonValidateList := TStringList.Create;
   fValidateList := TStringList.Create;
   fCanClose := True;
+  fNoDefaultCallEvent := True; //по умолчанию гасим события
 end;
 
 //destructor TBaseForm.Destroy;
@@ -120,6 +141,9 @@ end;
 
 procedure TBaseForm.DoFinishCall;
 begin
+  if fNoDefaultCallEvent then
+    Exit;
+
   if (CallObj.Cancelled and not CallObj.Accepted) or CallObj.Transfered then
     if fCloseOnCancelCall then
       Self.CloseAbsolute
@@ -143,12 +167,18 @@ begin
   if not CanClose then
     Exit;
 
-  CanClose := not HideOnClose;
+  CanClose := not HideOnClose or fInLightModal;
 
   if CanClose and fOnTopMost then
     UnSetTopMost;
 
-  if HideOnClose then
+  fInLightModal := False;
+  if Assigned(fModalThread) then
+  begin
+    fModalThread.Terminate;
+  end;
+    
+  if HideOnClose or fInLightModal then
     Hide;
 end;
 
@@ -160,6 +190,15 @@ begin
 
     FreeAndNil(fNonValidateList);
     FreeAndNil(fValidateList);
+
+    if Assigned(fModalThread) then
+    begin
+      if fModalThread.Active then
+        fModalThread.Terminate;
+      Sleep(300);
+      FreeAndNil(fModalThread);
+    end;
+    
   finally
 
   end;
@@ -213,9 +252,32 @@ begin
   fOnTopMost := True;
 end;
 
+procedure TBaseForm.SetUnSetTopMost(Avalue: Boolean);
+begin
+  if fOnTopMost <> AValue then
+  begin
+    if Avalue then
+      SetTopMost
+    else
+      UnSetTopMost;
+  end;
+end;
+
 procedure TBaseForm.SetValidateList(Alist: string);
 begin
   fValidateList.DelimitedText := Alist;
+end;
+
+procedure TBaseForm.ShowLightModal(AProc: TNotifyEvent);
+begin
+  fInLightModal := True;
+
+  if not Assigned(fModalThread) then
+    fModalThread := TThreadModal.Create(Self, AProc)
+  else
+    fModalThread.fProc := AProc;
+  fModalThread.Resume;
+  Show;
 end;
 
 procedure TBaseForm.UnSetTopMost;
@@ -319,6 +381,11 @@ begin
   SetControls;
 end;
 
+procedure TBaseForm.WmConnectDB(var Msg: TMessage);
+begin
+  SetControls;
+end;
+
 procedure TBaseForm.WmFinishCall(var Msg: TMessage);
 begin
   DoFinishCall;
@@ -333,6 +400,40 @@ procedure TBaseForm.WmTransferCall(var Msg: TMessage);
 begin
   fTransfered := True;
   DoTransferCall;
+end;
+
+  { TThreadModal }
+constructor TThreadModal.Create(AForm: TForm; AProc: TNotifyEvent);
+begin
+  if Assigned(AProc) then
+    fProc := AProc;
+  fForm := AForm;
+  FreeOnTerminate := True;
+  inherited Create(True);
+end;
+
+procedure TThreadModal.Execute;
+begin
+  fActive := True;
+  
+  while not fStop and not Terminated do
+  begin
+    if (fForm.ModalResult = 0) and not(fStop and Terminated) then
+    begin
+      Application.ProcessMessages;
+      Sleep(300);
+      Continue;
+    end
+    else
+    if  not(fStop and Terminated) then
+    begin
+      try fForm.Close; except end;
+      if Assigned(fProc) then
+        try fProc(fForm); except  end;
+      break;
+    end;
+  end;
+  Terminate;
 end;
 
 end.

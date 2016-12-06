@@ -76,6 +76,9 @@ begin
 //    DM.Workers.Edit;
 //    DM.Workers.FieldByName('IS_DELETED').AsInteger := 1;
 //    DM.Workers.Post;
+    if MsgBoxQuestion('¬ы действительно хотите удалить сотрудника?') = idNo then
+      Exit;
+
     DM.Workers.Delete;
     DM.Workers.ApplyUpdates;
     DM.Workers.Transaction.CommitRetaining;

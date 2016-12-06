@@ -3,7 +3,7 @@ object frmLogo: TfrmLogo
   Top = 0
   BorderIcons = []
   BorderStyle = bsNone
-  ClientHeight = 156
+  ClientHeight = 147
   ClientWidth = 294
   Color = clBtnFace
   TransparentColor = True
@@ -17,21 +17,22 @@ object frmLogo: TfrmLogo
   Position = poDesktopCenter
   DesignSize = (
     294
-    156)
+    147)
   PixelsPerInch = 96
   TextHeight = 13
   object Shape1: TShape
     Left = 0
     Top = 0
     Width = 294
-    Height = 156
+    Height = 147
     Align = alClient
     Brush.Color = clCream
     Shape = stRoundRect
+    ExplicitHeight = 155
   end
   object img1: TImage
     Left = 10
-    Top = -22
+    Top = -20
     Width = 272
     Height = 146
     Anchors = []
@@ -191,7 +192,7 @@ object frmLogo: TfrmLogo
   end
   object ProgressBar: TcxProgressBar
     Left = 1
-    Top = 118
+    Top = 116
     Anchors = [akLeft, akRight, akBottom]
     AutoSize = False
     ParentFont = False
@@ -204,7 +205,7 @@ object frmLogo: TfrmLogo
     Style.IsFontAssigned = True
     TabOrder = 0
     Visible = False
-    Height = 21
+    Height = 15
     Width = 292
   end
   object XPManifest1: TXPManifest

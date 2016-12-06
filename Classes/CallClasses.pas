@@ -3,23 +3,30 @@ unit CallClasses;
 interface
 uses
   System.UITypes, System.Classes, DB, System.SysUtils, Winapi.Messages,
-  Vcl.Forms, Winapi.Windows, Vcl.ExtCtrls, IBX.IBQuery;
+  Vcl.Forms, Winapi.Windows, Vcl.ExtCtrls, IBX.IBQuery, dxmdaset;
 
 type
   TCallInfo = class
+  private
+    FOnClientChange: TNotifyEvent;
+    FClientId: Integer;
+    procedure SetClientId(AValue: integer);
   public
     CallFlow: string;
     CallId: string;
     CallApiId: string;
     Phone:  string;
-    ClientId: Integer;
     ClientType: string;
     ClientSubType: string;
     CallResult: string;
     CalledNumber: string; //телфин сменил идентификацию звонков на CallApiId + CalledNumber + CallerIDNum
     CallerIDNum: string;
+    property ClientId: Integer read FClientId write SetClientId;
+
     procedure Clear;
     procedure Assign(ASource: TCallInfo);
+
+    property OnClientChange: TNotifyEvent read FOnClientChange write FOnClientChange;
 end;
 
 type
@@ -37,7 +44,9 @@ type
     fTransfered: Boolean; // звонок переведен
     fTimer: TTimer;
 
-    fFrmCall: TForm;  //форма-нидикатор звонка
+    fFrmCall: TForm;  //форма-индикатор звонка
+    FMainClientData: TDataset; // ссылка на источник
+    FClientData: TdxMemData; //запись Clients
 
     procedure SetActive(AValue: boolean);
     procedure SetReady(AValue: boolean);
@@ -47,8 +56,9 @@ type
     procedure OnTimerProc(Sender: TObject);
     procedure DoCheckCall;
     procedure SetTransfered(const AValue: Boolean);
+    procedure SetMainClientData(AValue: TDataset);
   protected
-
+    procedure ClientIdChange(Sender: TObject); virtual;
   public
     property Active: Boolean read fActive write SetActive;
     property Ready: Boolean read fReady write SetReady;
@@ -61,7 +71,10 @@ type
     property OnAcceptCall: TNotifyEvent read fOnAcceptCall write fOnAcceptCall;
     property OnTransferCall: TNotifyEvent read fOnTransferCall write fOnTransferCall;
     property OnCheckTimer: TNotifyEvent read fOnCheckTimer write fOnCheckTimer;
-    constructor Create; overload;
+
+    property MainClientData: TDataset read FMainClientData write SetMainClientData;
+
+    constructor Create(AMainDataSet: TDataset=nil); overload;
     destructor Destroy; overload;
     procedure StartCall(ACallFlow, ACallId, ACallApiId, APhone, AClientId, AClientType, ACalledNumber, ACallIdNum: string);overload;
     procedure StartCall(ACallInfo: TCallInfo); overload;
@@ -70,11 +83,13 @@ type
     procedure AcceptCall(ACallId: string);
     procedure TransferCall; virtual;
 
+    procedure SetClient(AId: integer); //установка датасета по клиенту
+    function CF(AFieldName: string): TField; // поле из локального датасета
 end;
 
 implementation
 uses
-  formCallEvent, CommonTypes;
+  formCallEvent, CommonTypes, CommonFunc;
 
 { TCallInfo }
 
@@ -102,6 +117,15 @@ begin
   CallerIDNum   := '';
 end;
 
+procedure TCallInfo.SetClientId(AValue: integer);
+begin
+  if AValue = FClientId then
+    Exit;
+  FClientId := AValue;
+  if Assigned(FOnClientChange) then
+    FOnClientChange(Self);
+end;
+
 { TCallPcroto }
 procedure TCallProto.AcceptCall(ACallId: string);
 begin
@@ -109,14 +133,28 @@ begin
     Exit;
 end;
 
-constructor TCallProto.Create;
+function TCallProto.CF(AFieldName: string): TField;
+begin
+  if not (Assigned(FClientData) and FClientData.Active) then
+    Exit;
+
+  Result := FClientData.FindField(AFieldName);
+end;
+
+procedure TCallProto.ClientIdChange(Sender: TObject);
+begin
+  SetClient(fCallInfo.ClientId);
+end;
+
+constructor TCallProto.Create(AMainDataSet: TDataSet);
 begin
   inherited Create;
   fCallInfo := TCallInfo.Create;
-  //fTimer := TTimer.Create;
-  //fTimer.Enabled  := False;
-  //fTimer.Interval := 1000;
-  //fTimer.OnTimer  := onTimerProc;
+  fCallInfo.FOnClientChange := ClientIdChange;
+
+  if AMainDataSet <> nil then
+    MainClientData := AMainDataSet;
+
   fReady := True;
 end;
 
@@ -185,6 +223,41 @@ begin
   end;
 end;
 
+procedure TCallProto.SetClient(AId: integer);
+var
+  BeforePost, AfterPost: TDataSetNotifyEvent;
+begin
+  if not Assigned(FClientData) then
+    Exit;
+  ClearDataset(FClientData);
+
+  if not FMainClientData.Locate('id', AId, []) then
+    Exit;
+
+  FClientData.Append;
+  BeforePost := FClientData.BeforePost;
+  AfterPost  := FClientData.AfterPost;
+  BeforePost := nil;
+  AfterPost  := nil;
+  try
+    CopyRecord(FMainClientData, FClientData);
+  finally
+    FClientData.BeforePost := BeforePost;
+    FClientData.AfterPost  := AfterPost;
+  end;
+end;
+
+procedure TCallProto.SetMainClientData(AValue: TDataset);
+begin
+  FMainClientData := AValue;
+  if not Assigned(FClientData) then
+  begin
+    FClientData := TdxMemData.Create(nil);
+    FClientData.CreateFieldsFromDataSet(FMainClientData);
+    FClientData.Open;
+  end;
+end;
+
 procedure TCallProto.SetReady(AValue: boolean);
 begin
   if AValue <> fReady then
@@ -250,6 +323,7 @@ begin
     CallerIDNum  := ACallIdNum;
     CallResult   := '';
     Accepted     := False;
+
   end;
 
   fActive := True;

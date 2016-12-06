@@ -17,6 +17,7 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure Timer2Timer(Sender: TObject);
     procedure CheckTimerTimer(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     fCallId: string;
     fCallApiId: string;
@@ -186,8 +187,12 @@ begin
   begin
     if not fResultSaved then
     begin
-      fCallResult  := DM.FinishSession(CallObj.CallInfo.CallApiId, ClientId);
-      fResultSaved := True;
+      try
+        fCallResult  := DM.FinishSession(CallObj.CallInfo.CallApiId, ClientId);
+        fResultSaved := True;
+      except
+        fResultSaved := False;
+      end;
     end;
   end;
 
@@ -220,12 +225,14 @@ begin
     end;
 
     if not fResultSaved then
-    begin
+    try
       fCallResult  := DM.FinishSession(CallObj.CallInfo.CallApiId, ClientId);
       fResultSaved := True;
+    except
+      fResultSaved := False;
     end;
 
-    fCanClose := True;
+    fCanClose := fResultSaved;
     ModalResult := mrOk;
   end;
 end;
@@ -291,6 +298,12 @@ begin
   inherited;
   if Assigned(frmCallEvent) then
     frmCallEvent.ModalResult := mrOk;
+end;
+
+procedure TfrmIncomeCallRoot.FormCreate(Sender: TObject);
+begin
+  inherited;
+  //NoDefaultCallEvent := False; //события звонков нужны
 end;
 
 procedure TfrmIncomeCallRoot.FormShow(Sender: TObject);
@@ -483,10 +496,14 @@ begin
  try
  try
   Timer2.Enabled := True;
+  CallPrm.Setup;
+  CallPrm.TelNum      := CallObj.CallInfo.Phone;
+  CallPrm.Client_id   := CallObj.CallInfo.ClientId;
+  CallPrm.Client_Type := CallObj.CallInfo.ClientType;
+  fClientCallPrm.Assign(CallPrm);
+
   if CallObj.CallInfo.ClientType = '' then
   try  // Вызываем неизвестный звонок.
-   CallPrm.Setup;
-   CallPrm.TelNum := CallObj.CallInfo.Phone;
    ExtPrm.CallParam := @CallPrm;
    fClientClose := False;
    case DM.ShowUnknownCallForm(CallObj.CallInfo.Phone, false).ModalRes of

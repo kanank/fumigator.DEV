@@ -25,7 +25,7 @@ uses
   dxSkinscxPCPainter;
 
 type
-  TSprFormRegim =(sfrEdit, sfrSelect); //режим формы обычный или выбор
+  TSprFormRegim =(sfrEdit, sfrSelect, sfrSelectAdd); //режим формы обычный или выбор
 type
   TSprForm = class(TBaseForm)
     RzPanel2: TRzPanel;

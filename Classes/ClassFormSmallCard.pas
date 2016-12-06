@@ -26,15 +26,16 @@ type
   TfrmSmallCard = class(TSimpleForm)
     RzBitBtn1: TRzBitBtn;
     Label7: TLabel;
-    cxDBLookupComboBox2: TcxDBLookupComboBox;
-    cxDBLookupComboBox3: TcxDBLookupComboBox;
+    cmbArea: TcxDBLookupComboBox;
+    cmbAreaUnit: TcxDBLookupComboBox;
     edtPhone: TcxMaskEdit;
     Label1: TLabel;
     Label8: TLabel;
     cmbRegion: TcxDBLookupComboBox;
     FrameUslugi: TFrameUslugi;
-    cxDBMemo1: TcxDBMemo;
+    edtGoods: TcxDBMemo;
     Label4: TLabel;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -54,9 +55,15 @@ uses
 
 { TfrmSmallCard }
 
+procedure TfrmSmallCard.FormCreate(Sender: TObject);
+begin
+  inherited;
+  NoDefaultCallEvent := True;
+end;
+
 procedure TfrmSmallCard.SetControls;
 begin
-  RzBitBtn1.Enabled := UserRights.WorkClientCard;
+  RzBitBtn1.Enabled := DM.CurrentUserSets.Rights.WorkClientCard;
 end;
 
 end.

@@ -131,7 +131,7 @@ begin
   if RecId = '' then
     Exit;
 
-  formMain.TCPClient.IOHandler.WriteLn(Format('#getrecord:%s', [RecId]));
+  formMain.SocketWriteLn(Format('#getrecord:%s', [RecId]));
 
   while (FileName = '') and (cnt < 50) do
   begin

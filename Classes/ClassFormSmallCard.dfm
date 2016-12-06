@@ -2,7 +2,11 @@ inherited frmSmallCard: TfrmSmallCard
   Caption = #1050#1088#1072#1090#1082#1072#1103' '#1082#1072#1088#1090#1086#1095#1082#1072'. '#1053#1086#1074#1099#1081' '#1082#1083#1080#1077#1085#1090
   ClientHeight = 436
   Position = poDesktopCenter
+  OnCreate = FormCreate
   ExplicitHeight = 474
+  DesignSize = (
+    641
+    436)
   PixelsPerInch = 96
   TextHeight = 18
   inherited img1: TImage
@@ -157,7 +161,7 @@ inherited frmSmallCard: TfrmSmallCard
       Spacing = 6
     end
   end
-  object cxDBLookupComboBox2: TcxDBLookupComboBox
+  object cmbArea: TcxDBLookupComboBox
     Left = 93
     Top = 138
     Margins.Left = 4
@@ -177,7 +181,7 @@ inherited frmSmallCard: TfrmSmallCard
     TabOrder = 1
     Width = 122
   end
-  object cxDBLookupComboBox3: TcxDBLookupComboBox
+  object cmbAreaUnit: TcxDBLookupComboBox
     Left = 223
     Top = 138
     Margins.Left = 4
@@ -354,7 +358,7 @@ inherited frmSmallCard: TfrmSmallCard
       end
     end
   end
-  object cxDBMemo1: TcxDBMemo
+  object edtGoods: TcxDBMemo
     Left = 359
     Top = 248
     Margins.Left = 4

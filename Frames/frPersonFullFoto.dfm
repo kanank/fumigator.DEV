@@ -31,43 +31,23 @@ inherited FramePersonFullFoto: TFramePersonFullFoto
       215)
     inherited Label11: TLabel
       Left = 2
-      Width = 53
-      Height = 16
-      Font.Height = -13
       ExplicitLeft = 2
-      ExplicitWidth = 53
-      ExplicitHeight = 16
     end
     inherited Label10: TLabel
       Left = 179
       Top = 8
-      Width = 23
-      Height = 16
-      Font.Height = -13
       ExplicitLeft = 179
       ExplicitTop = 8
-      ExplicitWidth = 23
-      ExplicitHeight = 16
     end
     inherited Label9: TLabel
       Left = 328
       Top = 8
-      Width = 55
-      Height = 16
-      Font.Height = -13
       ExplicitLeft = 328
       ExplicitTop = 8
-      ExplicitWidth = 55
-      ExplicitHeight = 16
     end
     inherited Label8: TLabel
       Left = 512
-      Width = 92
-      Height = 16
-      Font.Height = -13
       ExplicitLeft = 512
-      ExplicitWidth = 92
-      ExplicitHeight = 16
     end
     inherited Label2: TLabel
       Left = 5
@@ -84,25 +64,17 @@ inherited FramePersonFullFoto: TFramePersonFullFoto
     inherited Label4: TLabel
       Left = 186
       Top = 95
-      Width = 66
-      Height = 16
-      Font.Height = -13
       ExplicitLeft = 186
       ExplicitTop = 95
-      ExplicitWidth = 66
-      ExplicitHeight = 16
     end
     inherited Label5: TLabel
       Left = 186
       Top = 36
       Width = 41
-      Height = 16
       Caption = 'E-mail:'
-      Font.Height = -13
       ExplicitLeft = 186
       ExplicitTop = 36
       ExplicitWidth = 41
-      ExplicitHeight = 16
     end
     object Label6: TLabel [8]
       Left = 232
@@ -170,9 +142,10 @@ inherited FramePersonFullFoto: TFramePersonFullFoto
     inherited cmbSex: TcxDBComboBox
       Left = 54
       Top = 66
+      Style.IsFontAssigned = True
       ExplicitLeft = 54
       ExplicitTop = 66
-      ExplicitHeight = 26
+      ExplicitHeight = 24
     end
     inherited cmbProf: TcxDBLookupComboBox
       Left = 253
@@ -230,9 +203,10 @@ inherited FramePersonFullFoto: TFramePersonFullFoto
     end
     inherited cmbDateBirth: TcxDBDateEdit
       Left = 602
+      Style.IsFontAssigned = True
       ExplicitLeft = 602
       ExplicitWidth = 69
-      ExplicitHeight = 26
+      ExplicitHeight = 24
       Width = 69
     end
     inherited FramePhones: TFramePhones
@@ -251,10 +225,12 @@ inherited FramePersonFullFoto: TFramePersonFullFoto
         ExplicitHeight = 89
         inherited RzPanel2: TRzPanel
           Left = 142
+          Top = 19
           Height = 69
           Align = alRight
           Visible = True
           ExplicitLeft = 142
+          ExplicitTop = 19
           ExplicitHeight = 69
           inherited btnDel: TRzBitBtn
             Top = 46
@@ -297,9 +273,10 @@ inherited FramePersonFullFoto: TFramePersonFullFoto
       end
     end
     inherited edtEmailWork: TcxDBTextEdit
-      Left = 282
+      Left = 286
       Top = 32
-      ExplicitLeft = 282
+      Style.IsFontAssigned = True
+      ExplicitLeft = 286
       ExplicitTop = 32
     end
     inline FramePassport: TFramePassport
@@ -384,7 +361,7 @@ inherited FramePersonFullFoto: TFramePersonFullFoto
     end
   end
   object edtEmailPrivate: TcxDBTextEdit [2]
-    Left = 285
+    Left = 289
     Top = 55
     AutoSize = False
     BeepOnEnter = False
@@ -403,9 +380,13 @@ inherited FramePersonFullFoto: TFramePersonFullFoto
     StyleHot.LookAndFeel.NativeStyle = True
     TabOrder = 1
     Height = 21
-    Width = 143
+    Width = 129
   end
   inherited Query_upd: TIBUpdateSQL
+    RefreshSQL.Strings = (
+      
+        'select name, surname, family, date_birth, sex, prof_id, photo_id' +
+        ', email_work, email_private from PERSONS where id = :NEW_ID')
     ModifySQL.Strings = (
       'update PERSONS set '
       'NAME = :NAME, '
@@ -416,15 +397,16 @@ inherited FramePersonFullFoto: TFramePersonFullFoto
       'PASS_ID = :PASS_ID,'
       'PROF_ID = :PROF_ID,'
       'PHOTO_ID = :PHOTO_ID,'
-      'EMAIL_WORK = :EMAIL_WORK '
+      'EMAIL_WORK = :EMAIL_WORK,'
+      'EMAIL_PRIVATE = :EMAIL_PRIVATE '
       'where id = :ID')
     InsertSQL.Strings = (
       
         'insert into PERSONS(id, name, surname, family, date_birth, sex,p' +
-        'ass_id, prof_id, photo_id, email_work) '
+        'ass_id, prof_id, photo_id, email_work, email_private) '
       
         'values(:id, :name, :surname, :family, :date_birth, :sex, :pass_i' +
-        'd, :prof_id, :photo_id, :email_work)')
+        'd, :prof_id, :photo_id, :email_work, :email_private)')
     Left = 88
     Top = 3
   end

@@ -40,7 +40,7 @@ implementation
 
 uses
   DM_Main,
-  IBX.IBQuery, formLogo, frmMain, CommonFunc, CommonVars;
+  IBX.IBQuery, formLogo, frmMain, CommonFunc, CommonVars, CommonTypes;
 
 procedure TfrmLogin.btnOKClick(Sender: TObject);
 var
@@ -51,7 +51,7 @@ begin
 
   try
     try
-      Q := CreateRWQuery;
+      Q := DM_Main.CreateRWQuery;
       Q.SQL.Text := 'SELECT * from login('
         + QuotedStr(Edt1.Text) + ', ' + QuotedStr(Edt2.Text) + ')';
       Q.Open;
@@ -63,7 +63,7 @@ begin
     if Assigned(Q) and Q.Active and (Q.RecordCount > 0)
        and not Q.Fields[0].isNull then
     begin
-      DM.CurrentUserSets := DM.GetCurrentUser(Q.Fieldbyname('ID').asInteger);
+      DM.CurrentUserSets := TCurrentUser.Create(DM.DB, Q.Fieldbyname('ID').asInteger);
       DM.CurrentUserSets.session_id := Q.Fieldbyname('SESSION_ID').asInteger;
     end
     else

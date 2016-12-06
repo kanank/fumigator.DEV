@@ -15,6 +15,8 @@ inherited frmWorkers: TfrmWorkers
     Margins.Top = 6
     Margins.Right = 6
     Margins.Bottom = 6
+    ExplicitLeft = 639
+    ExplicitTop = 483
   end
   inherited RzPanel2: TRzPanel
     Width = 660
@@ -32,6 +34,8 @@ inherited frmWorkers: TfrmWorkers
       Margins.Top = 6
       Margins.Right = 6
       Margins.Bottom = 6
+      ExplicitLeft = 772
+      ExplicitTop = -15
     end
   end
   inherited RzPanel1: TRzPanel
@@ -43,6 +47,7 @@ inherited frmWorkers: TfrmWorkers
     Margins.Right = 6
     Margins.Bottom = 6
     ExplicitTop = 440
+    ExplicitWidth = 660
     ExplicitHeight = 49
     inherited Cancel_btn: TRzButton
       Left = 718
@@ -51,6 +56,7 @@ inherited frmWorkers: TfrmWorkers
       Margins.Right = 6
       Margins.Bottom = 6
       Font.Color = clWindowText
+      ExplicitLeft = 718
     end
     inherited Edit_btn: TRzButton
       Top = 5
@@ -94,6 +100,9 @@ inherited frmWorkers: TfrmWorkers
     Margins.Right = 6
     Margins.Bottom = 6
     Align = alClient
+    ExplicitTop = 28
+    ExplicitWidth = 660
+    ExplicitHeight = 412
     inherited GridView: TcxGridDBTableView
       FilterBox.CustomizeDialog = False
       DataController.DataSource = DataModuleMain.DSWorkers

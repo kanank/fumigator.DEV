@@ -5,8 +5,7 @@ inherited frmClientUr: TfrmClientUr
   Position = poDesktopCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  ExplicitLeft = -158
-  ExplicitTop = -288
+  ExplicitTop = -194
   ExplicitWidth = 1079
   ExplicitHeight = 784
   PixelsPerInch = 96
@@ -653,7 +652,6 @@ inherited frmClientUr: TfrmClientUr
           ExplicitLeft = 91
           ExplicitTop = 60
           ExplicitWidth = 302
-          ExplicitHeight = 26
           Width = 302
         end
         inherited edtName: TcxDBTextEdit
@@ -666,7 +664,6 @@ inherited frmClientUr: TfrmClientUr
           ExplicitLeft = 91
           ExplicitTop = 31
           ExplicitWidth = 302
-          ExplicitHeight = 26
           Width = 302
         end
         inherited edtFamily: TcxDBTextEdit
@@ -679,7 +676,6 @@ inherited frmClientUr: TfrmClientUr
           ExplicitLeft = 91
           ExplicitTop = 2
           ExplicitWidth = 302
-          ExplicitHeight = 26
           Width = 302
         end
         inherited cmbSex: TcxDBComboBox
@@ -709,7 +705,6 @@ inherited frmClientUr: TfrmClientUr
           ExplicitLeft = 119
           ExplicitTop = 89
           ExplicitWidth = 302
-          ExplicitHeight = 26
           Width = 302
         end
       end
@@ -1988,14 +1983,15 @@ inherited frmClientUr: TfrmClientUr
     BorderOuter = fsNone
     TabOrder = 2
     inline frameClientCalls: TframeClientCalls
-      Left = -3
+      Left = 0
       Top = 0
-      Width = 1059
-      Height = 263
+      Width = 1063
+      Height = 145
       Margins.Left = 4
       Margins.Top = 4
       Margins.Right = 4
       Margins.Bottom = 4
+      Align = alClient
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -15

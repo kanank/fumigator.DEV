@@ -82,7 +82,8 @@ begin
     SaveClient;
 
   if not fResultSaved then
-    SaveResult;
+    if not SaveResult then
+      exit;
 
   if fClientSaved and fResultSaved then
   begin
@@ -117,6 +118,7 @@ begin
   frmSessionResult.Q.ParamByName('callapiid').AsString := CallObj.CallInfo.CallApiId;
   frmSessionResult.Q.ParamByName('callednum').AsString := CallObj.CallInfo.CalledNumber;
   frmSessionResult.Q.ParamByName('callernum').AsString := CallObj.CallInfo.CallerIDNum;
+  step := 0;
   while 1=1 do
   begin
     frmSessionResult.Q.Close;
@@ -144,6 +146,7 @@ end;
 function TfrmClientResult.CheckFinish: boolean;
 begin
   Result := not CallObj.Active;
+  fCanClose := Result;
   if not Result then
     Application.MessageBox('Действие не разрешено во время звонка!',
      'Исходящий звонок', MB_ICONSTOP);
@@ -189,7 +192,7 @@ procedure TfrmClientResult.FormCloseQuery(Sender: TObject;
 begin
   if not (fClientSaved and fResultSaved) then
     CanClose := False;
-  inherited;
+  //inherited;
 end;
 
 procedure TfrmClientResult.FormDestroy(Sender: TObject);
@@ -242,7 +245,7 @@ end;
 procedure TfrmClientResult.btnDeleteCallClick(Sender: TObject);
 begin
   try
-    formMain.TCPClient.Socket.WriteLn('#calldelete:' + Self.CallApiId);
+    formMain.SocketWriteLn('#calldelete:' + Self.CallApiId);
   finally
     DM.inCalling := False;
   end;

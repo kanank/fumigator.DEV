@@ -54,6 +54,9 @@ inherited frmIncomeCall: TfrmIncomeCall
     Margins.Bottom = 6
     ExplicitTop = 261
     ExplicitWidth = 884
+    DesignSize = (
+      884
+      51)
     inherited Image2: TImage
       Margins.Left = 6
       Margins.Top = 6

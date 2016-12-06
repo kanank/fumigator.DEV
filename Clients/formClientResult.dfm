@@ -328,7 +328,6 @@ inherited frmClientResult: TfrmClientResult
       Margins.Top = 4
       Margins.Right = 4
       Margins.Bottom = 4
-      ModalResult = 1
       Anchors = [akTop, akRight]
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Font.Charset = DEFAULT_CHARSET

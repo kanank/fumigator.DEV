@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCalendar, cxContainer, cxCheckBox;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCalendar, cxContainer, cxCheckBox,
+  cxDBLookupComboBox;
 
 
 type
@@ -80,6 +81,7 @@ type
     mnuEdit: TPopupMenu;
     miEditCli: TMenuItem;
     miChangeTypeCli: TMenuItem;
+    btnSelect: TRzButton;
     procedure Fiz_btnClick(Sender: TObject);
     procedure Ur_btnClick(Sender: TObject);
     procedure Edit_btnClick(Sender: TObject);
@@ -121,6 +123,7 @@ type
       ANewItemRecordFocusingChanged: Boolean);
     procedure miEditCliClick(Sender: TObject);
     procedure miChangeTypeCliClick(Sender: TObject);
+    procedure btnSelectClick(Sender: TObject);
   private
     FisUr: integer;
     fStatus: Integer;
@@ -130,6 +133,7 @@ type
     procedure FilterRecord(DataSet: TDataSet; var Accept: Boolean);
     procedure SetButton(AButton: TRzButton);
     procedure SetDelButton(AButton: TRzButton);
+    function LocateClient: Boolean;
   protected
     procedure SetFormRegim(AValue: TSprFormRegim); override;
     procedure SetControls; override;
@@ -166,6 +170,8 @@ var
 begin
   try
     //DS.DataSet.Filtered := false;
+    if not TRzButton(Sender).Enabled then
+      Exit;
 
     extPrm := TClientParam.Init(status, 0, nil);
     //extPrm.CallParam.Status_Id := status;
@@ -181,9 +187,9 @@ begin
       fUr := FisUr;
 
     if (FUr = 1) then
-      DM.ShowClientUr(asCreate, extPrm)
+      DM.ShowClientUr(asCreate, extPrm, fFormRegim = sfrSelectAdd)
     else
-      DM.ShowClientFiz(asCreate, extPrm);
+      DM.ShowClientFiz(asCreate, extPrm, fFormRegim = sfrSelectAdd);
 
    id := DS.DataSet.FieldByName('id').AsInteger;
   finally
@@ -215,6 +221,11 @@ begin
   status := 2;
 end;
 
+procedure TfrmClients.btnSelectClick(Sender: TObject);
+begin
+  ModalResult := mrOk;
+end;
+
 procedure TfrmClients.chkDeletedClick(Sender: TObject);
 begin
   SetFilter;
@@ -234,7 +245,7 @@ begin
 
     DS.DataSet.OnFilterRecord := Self.FilterRecord;
   finally
-    DM.ClientList.AfterScroll := DM.ClientListAfterScroll;
+    //DM.ClientList.AfterScroll := DM.ClientListAfterScroll;
   end;
 end;
 
@@ -242,6 +253,12 @@ procedure TfrmClients.Del_btnClick(Sender: TObject);
 var
   i: integer;
 begin
+  if not TRzButton(Sender).Enabled then
+    Exit;
+
+ if not LocateClient then
+      Exit;
+
  if MsgBoxQuestion(Format('Вы действительно хотите %s клиента %s?',
    [AnsiLowerCase(Del_btn.Caption), DM.Clients.FieldByName('name').AsString])) = IDYES then
  try
@@ -273,13 +290,11 @@ var
   mres: TModalResult;
   //id: integer;
 begin
+  if not TRzButton(Sender).Enabled then
+    Exit;
   try
-//    id := DS.DataSet.FieldByName('id').AsInteger;
-//    DS.DataSet.Filtered := False;
-//    if not DS.DataSet.Locate('id', id, []) then
-//      Exit;
-
-    DM.GetDataset(DM.Clients);
+    if not LocateClient then
+      Exit;
 
     prm := NewFrmCreateParam(asEdit, DM.Clients);
     if DM.Clients.FieldByName('isur').AsInteger = 0 then
@@ -459,10 +474,19 @@ begin
   SetDelButton(Del_btn);
 end;
 
+function TfrmClients.LocateClient: Boolean;
+begin
+  DM.GetDataset(DM.Clients);
+  Result := DM.Clients.Locate('id', DS.DataSet.FieldByName('id').AsInteger, []);
+end;
+
 procedure TfrmClients.miChangeTypeCliClick(Sender: TObject);
 var
   i: Integer;
 begin
+  if not LocateClient then
+    Exit;
+
 if MsgBoxQuestion(Format('Вы действительно хотите изменить тип клиента %s?',
    [Ds.Dataset.FieldByName('name').AsString])) = IDYES then
  try
@@ -503,7 +527,9 @@ var
   frm: TForm;
 begin
   try
-    DM.GetDataset(DM.Clients);
+   if not LocateClient then
+      Exit;
+
     frmClientResult := TfrmClientResult.Create(self);
 
     prm := NewFrmCreateParam(asEdit, DM.Clients);
@@ -554,7 +580,7 @@ end;
 
 procedure TfrmClients.SetControls;
 begin
-  Add_btn1.Enabled := UserRights.WorkClientCard;
+  Add_btn1.Enabled := DM.CurrentUserSets.Rights.WorkClientCard;
   Add_btn.Enabled  := Add_btn1.Enabled;
   Edit_btn.Enabled := Add_btn1.Enabled;
   Del_btn.Enabled := Add_btn1.Enabled;
@@ -598,14 +624,15 @@ begin
   inherited;
   f := fFormRegim = sfrSelect;
 
-  if f then
+  if fFormRegim = sfrSelect then
   begin
     Add_btn1.Caption := 'ОК';
     Add_btn1.DropDownMenu := nil;
   end;
 
-  Edit_btn.Visible := not f;
-  Del_btn.Visible  := not f;
+  Edit_btn.Visible  := fFormRegim = sfrEdit;
+  Del_btn.Visible   := fFormRegim = sfrEdit;
+  btnSelect.Visible := fFormRegim = sfrSelectAdd;
 end;
 
 procedure TfrmClients.SetIsUr(AValue: integer);

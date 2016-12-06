@@ -199,7 +199,7 @@ begin
 
 procedure TfrmDictionaries.SetControls;
 begin
-  pnlEdit.Enabled := UserRights.EditDic;
+  pnlEdit.Enabled := DM.CurrentUserSets.Rights.EditDic;
 end;
 
 procedure TfrmDictionaries.tvMaterialsEnter(Sender: TObject);

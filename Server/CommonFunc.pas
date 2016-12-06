@@ -13,7 +13,9 @@ function LockMutex(AHandle: THandle; ATimeout: integer): Boolean;
 function UnlockMutex(AHandle: THandle): boolean;
 function GetFileSize(FileName: String): Integer;
 function CopyRecord(ASource, ADest: TDataset): boolean;
+function ClearDataset(ADataset: TDataset): boolean; //очистка датасета
 function FindFieldVisible(ADataset: TDataSet; AFieldName: string): TField;
+
 
 implementation
 uses
@@ -294,7 +296,29 @@ begin
     if ADest.State in [dsEdit, dsInsert] then
       ADest.Post;
   end;
-  
+end;
+
+function ClearDataset(ADataset: TDataset): boolean; //очистка датасета
+var
+  BeforeDel, AfterDel: TDataSetNotifyEvent;
+begin
+  if not Assigned(ADataset)
+     or not ADataset.Active
+     or (ADataset.RecordCount = 0) then
+    Exit;
+
+  BeforeDel := ADataset.BeforeDelete;
+  AfterDel  := ADataset.AfterDelete;
+  ADataset.BeforeDelete := nil;
+  ADataset.AfterDelete  := nil;
+  try
+    ADataset.First;
+    while not ADataset.Eof do
+      ADataset.Delete;
+  finally
+    ADataset.BeforeDelete := BeforeDel;
+    ADataset.AfterDelete  := AfterDel;
+  end;
 end;
 
 function FindFieldVisible(ADataset: TDataSet; AFieldName: string): TField;

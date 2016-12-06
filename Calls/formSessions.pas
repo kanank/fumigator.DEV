@@ -83,6 +83,11 @@ type
     pnlFiltered: TPanel;
     Label2: TLabel;
     lblCount: TLabel;
+    GridViewColumn16: TcxGridDBColumn;
+    updQ: TIBUpdateSQL;
+    btnExport: TRzButton;
+    FileSaveDialog: TFileSaveDialog;
+    chkExtCallOnly: TcxCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure RzButton1Click(Sender: TObject);
     procedure GridViewCustomDrawCell(Sender: TcxCustomGridTableView;
@@ -100,6 +105,9 @@ type
       ANewItemRecordFocusingChanged: Boolean);
     procedure FormDestroy(Sender: TObject);
     procedure QAfterRefresh(DataSet: TDataSet);
+    procedure GridViewDataControllerFilterChanged(Sender: TObject);
+    procedure btnExportClick(Sender: TObject);
+
   private
     procedure CalcHeader;
     function MillesecondToDateTime(ms: int64): TDateTime;
@@ -119,8 +127,18 @@ implementation
 
 {$R *.dfm}
 uses
+  cxGridExportLink,
   DM_Main, formSessionEdit, formSessionResult, formClientFiz, formClientUr,
   formClientResult, CommonTypes, CommonVars, CommonFunc;
+
+procedure TfrmSessions.btnExportClick(Sender: TObject);
+var
+  fname: string;
+begin
+  FileSaveDialog.FileName := 'Сессии_' + FormatDateTime('ddmmyy_hhnnss', Now);
+  if FileSaveDialog.Execute then
+    ExportGridToExcel(FileSaveDialog.FileName, Grid, False, True, False);
+end;
 
 procedure TfrmSessions.CalcHeader;
 var
@@ -186,49 +204,56 @@ var
   prm: TFrmCreateParam;
   mres: TModalResult;
   frm: TForm;
+  f: Boolean;
 begin
+  if not TRzButton(Sender).Enabled then
+    Exit;
+
   frmSessionEdit := TfrmSessionEdit.Create(nil);
 
   try
   DS.dataset.DisableControls;
 
-  frmSessionResult := TfrmSessionResult.Create(nil);
-  frmSessionResult.NeedCheckCall := False;
-  frmSessionResult.Cancel_btn.Visible := False;
-  frmSessionResult.Height := frmSessionResult.Height -
-    frmSessionResult.Cancel_btn.Height - 10;
-  frmSessionResult.Parent := frmSessionEdit.pnlResult;
-  frmSessionResult.Q.ParamByName('callapiid').AsString :=
-    DS.DataSet.FieldByName('callapiid').AsString;
-  frmSessionResult.Q.ParamByName('callednum').AsString :=
-    DS.DataSet.FieldByName('callednum').AsString;
-  frmSessionResult.Q.ParamByName('callernum').AsString :=
-    DS.DataSet.FieldByName('callernum').AsString;
+  with frmSessionEdit do
+  begin
+    frmResult := TfrmSessionResult.Create(nil);
+    TfrmSessionResult(frmResult).NeedCheckCall := False;
+    TfrmSessionResult(frmResult).Cancel_btn.Visible := False;
+    TfrmSessionResult(frmResult).Height := frmResult.Height -
+      TfrmSessionResult(frmResult).Cancel_btn.Height - 10;
+    TfrmSessionResult(frmResult).Parent := frmSessionEdit.pnlResult;
+    TfrmSessionResult(frmResult).Q.ParamByName('callapiid').AsString :=
+      Self.DS.DataSet.FieldByName('callapiid').AsString;
+    TfrmSessionResult(frmResult).Q.ParamByName('callednum').AsString :=
+      Self.DS.DataSet.FieldByName('callednum').AsString;
+    TfrmSessionResult(frmResult).Q.ParamByName('callernum').AsString :=
+      Self.DS.DataSet.FieldByName('callernum').AsString;
 
-  frmSessionResult.Q.Open;
-  frmSessionResult.Q.Edit;
+    TfrmSessionResult(frmResult).Q.Open;
+    TfrmSessionResult(frmResult).Q.Edit;
 
-  (*frmSessionResult.edtResult.Text :=
-    frmSessionResult.Q.FieldByName('RESULT').AsString;
-  frmSessionResult.edtIshod.Text :=
-    frmSessionResult.Q.FieldByName('ISHOD').AsString;*)
+    (*frmSessionResult.edtResult.Text :=
+      frmSessionResult.Q.FieldByName('RESULT').AsString;
+    frmSessionResult.edtIshod.Text :=
+      frmSessionResult.Q.FieldByName('ISHOD').AsString;*)
 
-  frmSessionResult.Position := poDefault;
+    frmResult.Position := poDefault;
 
-  frmSessionResult.BorderIcons := [];
-  frmSessionResult.BorderStyle := bsNone;
+    frmResult.BorderIcons := [];
+    frmResult.BorderStyle := bsNone;
 
-  //frmSessionEdit.pnlResult.Height := frmSessionResult.Height + 5;
-  frmSessionEdit.frmResult := frmSessionResult;
-  frmSessionResult.Show;
+    //frmSessionEdit.pnlResult.Height := frmSessionResult.Height + 5;
+    //frmSessionEdit.frmResult := frmSessionResult;
+    frmResult.Show;
+  end;
 
   //карточка клиента
   DM.GetDataset(DM.Clients);
 
   if DM.Clients.Locate('id', DS.DataSet.FieldByName('client_id').AsInteger, []) then
   begin
-
-    prm := NewFrmCreateParam(asShow, DM.Clients);
+    frmSessionEdit.SetupClientForm(DS.DataSet.FieldByName('client_id').AsInteger);
+    {prm := NewFrmCreateParam(asShow, DM.Clients);
     if DM.Clients.FieldByName('type_cli').AsInteger = 0 then
     begin
       frmClientFiz := TfrmClientFiz.Create(nil, '', @prm);
@@ -246,14 +271,14 @@ begin
       frmSessionEdit.frm := frmClientUr;
     end;
 
-    if Assigned(frmSessionEdit.frm) then
-      frmSessionEdit.SetClientForm
-    else
-      frmSessionEdit.btnClientEdit.Enabled := False;
+    //if Assigned(frmSessionEdit.frm) then
+    //  frmSessionEdit.SetClientForm
+    //else
+    //frmSessionEdit.btnClientEdit.Enabled := Assigned(frmSessionEdit.frm);
 
     //frmSessionEdit.ScrollBox.Height:= frmSessionResult.Height + 5 +
     //  frm.Height + 5 + frmSessionEdit.pnlCalls.Height;
-    frmSessionEdit.pnlClient.Height := frm.Height + 5;
+    frmSessionEdit.pnlClient.Height := frm.Height + 5; }
 
   end
   else
@@ -264,37 +289,68 @@ begin
     //   frmSessionEdit.pnlCalls.Height;
   end;
 
-    frmSessionEdit.pnlResult.Height := frmSessionResult.Height + 5;
+    frmSessionEdit.pnlResult.Height := frmSessionEdit.frmResult.Height + 5;
 
     frmSessionEdit.frameClientCalls.AddParam('client_id', DS.DataSet.FieldByName('client_id'));
     frmSessionEdit.frameClientCalls.OpenData;
 
     frmSessionEdit.ShowModal;
 
-    if (frmSessionEdit.ModalResult = mrOk) and
-       frmSessionResult.isModified  then
+    if (frmSessionEdit.ModalResult = mrOk) then
+    try
+      f := Q.Locate('id', MemQ.FieldByName('id').AsInteger, []);
+
+      if TfrmSessionResult(frmSessionEdit.frmResult).isModified  then
       try
-        frmSessionResult.Q.FieldByName('worker_id').AsInteger := DM.CurrentUserSets.ID;
-        frmSessionResult.Q.Post;
-          if frmSessionResult.Q.Transaction.Active then
-             frmSessionResult.Q.Transaction.CommitRetaining;
-          MemQ.Edit;
-          MemQ.FieldByName('ISHOD').AsString :=
-            frmSessionResult.Q.FieldByName('ISHOD').AsString;
-          MemQ.FieldByName('RESULT').AsString :=
-            frmSessionResult.Q.FieldByName('RESULT').AsString;
-          MemQ.FieldByName('WORKER_ID').AsString :=
-            frmSessionResult.Q.FieldByName('WORKER_ID').AsString;
+        TfrmSessionResult(frmSessionEdit.frmResult).Q.FieldByName('worker_id').AsInteger := DM.CurrentUserSets.ID;
+        TfrmSessionResult(frmSessionEdit.frmResult).Q.Post;
+          if TfrmSessionResult(frmSessionEdit.frmResult).Q.Transaction.Active then
+             TfrmSessionResult(frmSessionEdit.frmResult).Q.Transaction.CommitRetaining;
+          //обновление датасетов
 
-          MemQ.Post;
+//  перенос в finally        MemQ.Edit;
+//          MemQ.FieldByName('ISHOD').AsString :=
+//            TfrmSessionResult(frmSessionEdit.frmResult).Q.FieldByName('ISHOD').AsString;
+//          MemQ.FieldByName('RESULT').AsString :=
+//            TfrmSessionResult(frmSessionEdit.frmResult).Q.FieldByName('RESULT').AsString;
+//          MemQ.FieldByName('WORKER_ID').AsString :=
+//            TfrmSessionResult(frmSessionEdit.frmResult).Q.FieldByName('WORKER_ID').AsString;
+//
+//          MemQ.Post;
         except
-           if frmSessionResult.Q.Transaction.Active then
-             frmSessionResult.Q.Transaction.RollbackRetaining;
-        end
-
+           if TfrmSessionResult(frmSessionEdit.frmResult).Q.Transaction.Active then
+             TfrmSessionResult(frmSessionEdit.frmResult).Q.Transaction.RollbackRetaining;
+          MsgBoxError('Ошибка сохранения данных:' + #13#10 +
+            Exception(ExceptObject).Message);
+        end;
+      if frmSessionEdit.AddedClientId <> 0 then //добавили клиента в сессию
+      begin
+        if f then
+        try
+          Q.Edit;
+          Q.FieldByName('CLIENT_ID').AsInteger := frmSessionEdit.AddedClientId;
+          Q.Post;
+        except
+          if Q.Transaction.Active then
+            Q.Transaction.RollbackRetaining;
+          MsgBoxError('Ошибка сохранения данных сессии:' + #13#10 +
+            Exception(ExceptObject).Message);
+        end;
+        try
+          MemQ.Edit;
+          MemQ.FieldByName('CLIENT_ID').AsInteger := frmSessionEdit.AddedClientId;
+          MemQ.Post;
+        finally
+        end;
+      end;
+    finally
+      //обновление датасетов
+      Q.Refresh;
+      CopyRecord(Q, MemQ);
+    end;
   finally
     FreeAndNil(frmSessionEdit);
-    FreeAndNil(frmSessionResult);
+    //FreeAndNil(frmSessionResult);
 
     DS.DataSet.EnableControls;
   end;
@@ -315,7 +371,10 @@ begin
   while not Q.Eof do
   begin
     if (Q.FieldByName('CALLTYPE').AsInteger = 0) and
-       (Q.FieldByName('answer').AsInteger = 0) then
+       (Q.FieldByName('answer').AsInteger = 0) and
+       (not chkWorkerClients.Checked  or
+        (chkWorkerClients.Checked and
+        DM.isWorkerClient(Q.FieldByName('Client_id').asInteger))) then
     begin
       if scur <> Q.FieldByName('CALLAPIID').AsString then
       begin
@@ -346,6 +405,9 @@ begin
   MemHeader.Append;
   MemHeader.Post;
   cmbFilter.ItemIndex := 0;
+
+  chkWorkerClients.Checked := DM.CurrentUserSets.HasClient;
+  chkWorkerClients.Enabled := chkWorkerClients.Checked;
 end;
 
 
@@ -374,6 +436,11 @@ begin
    ACanvas.Canvas.Font.Style := [fsBold]
  else
    ACanvas.Canvas.Font.Style := [];
+end;
+
+procedure TfrmSessions.GridViewDataControllerFilterChanged(Sender: TObject);
+begin
+  lblCount.Caption := IntToStr(GridView.DataController.DataRowCount);
 end;
 
 procedure TfrmSessions.GridViewFocusedRecordChanged(
@@ -479,7 +546,12 @@ begin
   f1 := True; f2 := True;
   f0 := not chkWorkerClients.Checked  or
         (chkWorkerClients.Checked and
+         (DataSet.FieldByName('Client_id').asInteger > 0) and
            DM.isWorkerClient(DataSet.FieldByName('Client_id').asInteger));
+  if chkExtCallOnly.Checked then
+    f0 := f0 and
+      not ((Pos('*', DataSet.FieldByName('CALLERNUM').AsString) > 0) and
+          (Pos('*', DataSet.FieldByName('CALLEDN').AsString) > 0));
   if f0 then
   begin
     if miFilterAccepted.Checked or (cmbFilter.ItemIndex = 1) then
@@ -539,7 +611,7 @@ end;
 
 procedure TfrmSessions.SetControls;
 begin
-  Edit_btn.Enabled := UserRights.InputSessionResult;
+  Edit_btn.Enabled := DM.CurrentUserSets.Rights.InputSessionResult;
 end;
 
 procedure TfrmSessions.SetFilter;
@@ -565,11 +637,15 @@ begin
   if not Q.Active then
     Exit;
 
+  memQ.OnFilterRecord := nil;
+  MemQ.Filtered := false;
   MemQ.ControlsDisabled;
   try
     case cmbFilter.ItemIndex  of
       0: begin
            MemQ.CopyFromDataSet(Q);
+           MemQ.OnFilterRecord := QFilterRecord;
+           MemQ.Filtered := True;
            Exit;
          end;
       6: begin

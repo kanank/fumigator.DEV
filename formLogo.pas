@@ -46,8 +46,6 @@ implementation
 
 {$R *.dfm}
 
-
-
 { TfrmLogo }
 
 function TfrmLogo.GetInfo: string;
@@ -58,7 +56,9 @@ end;
 procedure TfrmLogo.RefreshForm;
 begin
   BringWindowToTop(self.Handle);
-  self.Repaint;
+  //self.Repaint;
+  Info.Repaint;
+  ProgressBar.Repaint;
 end;
 
 procedure TfrmLogo.SetInfo(AValue: string);

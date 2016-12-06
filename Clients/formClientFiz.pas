@@ -287,6 +287,7 @@ end;
 procedure TfrmClientFiz.FormCreate(Sender: TObject);
 begin
   inherited;
+
   if fFrmParam.Dataset <> nil then
     DS.DataSet := fFrmParam.Dataset;
 

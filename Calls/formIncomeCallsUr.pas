@@ -95,7 +95,7 @@ end;
 
 procedure TfrmIncomeCallUr.Setcontrols;
 begin
-  Exit_bnt.Enabled := UserRights.WorkClientCard;
+  Exit_bnt.Enabled := DM.CurrentUserSets.Rights.WorkClientCard;
 end;
 
 end.

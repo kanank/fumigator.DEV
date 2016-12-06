@@ -250,8 +250,8 @@ end;
 
 procedure TfrmWorker.SetControls;
 begin
-  Short_Tab.Enabled := UserRights.ShowWorkerInfoSmall;
-  Full_Tab.Enabled := UserRights.ShowWorkerInfoFull;
+  Short_Tab.Enabled := DM.CurrentUserSets.Rights.ShowWorkerInfoSmall;
+  Full_Tab.Enabled := DM.CurrentUserSets.Rights.ShowWorkerInfoFull;
 end;
 
 procedure TfrmWorker._FramePersonFullcmbDateBirthPropertiesInitPopup(

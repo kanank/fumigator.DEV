@@ -15,7 +15,7 @@ var
 
   InitBirthYear: integer = 30;
 
-  ServerHost: string  = '81.177.48.139'; //'localhost';  // 'localhost';  //''81.177.48.139'; //;
+  ServerHost: string  = '212.152.36.68';//'localhost';  // '81.177.48.139'; // 'localhost';  //''81.177.48.139'; //;
   ServerPort: integer = 1025;
   ServerHttpPort: integer = 45455;
 

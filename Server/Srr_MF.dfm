@@ -111,7 +111,33 @@ object MF: TMF
             Height = 13
             Caption = #1055#1086#1088#1090':'
           end
-          object Button2: TButton
+          object Label15: TLabel
+            Left = 11
+            Top = 68
+            Width = 163
+            Height = 13
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1089#1077#1088#1074#1077#1088#1072' '#1089#1086#1082#1077#1090#1086#1074
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = 4868682
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+          end
+          object lbl_Socket: TLabel
+            Left = 200
+            Top = 68
+            Width = 69
+            Height = 13
+            Caption = #1053#1077' '#1072#1082#1090#1080#1074#1077#1085'!'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clMaroon
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = [fsBold]
+            ParentFont = False
+          end
+          object btnSocket: TButton
             Left = 441
             Top = 7
             Width = 169
@@ -119,7 +145,7 @@ object MF: TMF
             Anchors = [akTop, akRight]
             Caption = #1057#1077#1088#1074#1077#1088' '#1089#1086#1082#1077#1090#1086#1074
             TabOrder = 0
-            OnClick = Button2Click
+            OnClick = btnSocketClick
           end
           object edtSocketPort: TSpinEdit
             Left = 45
@@ -263,10 +289,10 @@ object MF: TMF
           end
           object TelStatus_lbl: TLabel
             Left = 200
-            Top = 69
+            Top = 71
             Width = 69
             Height = 13
-            Caption = #1053#1077' '#1072#1082#1090#1080#1074#1077#1085'!'
+            Caption = #1053#1077' '#1072#1082#1090#1080#1074#1085#1072'!'
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clMaroon
             Font.Height = -11
@@ -288,7 +314,7 @@ object MF: TMF
             Height = 13
             Caption = #1050#1072#1090#1072#1083#1086#1075' '#1076#1083#1103' '#1079#1072#1087#1080#1089#1077#1081
           end
-          object Button1: TButton
+          object btnCallEvents: TButton
             Left = 441
             Top = 21
             Width = 169
@@ -296,7 +322,7 @@ object MF: TMF
             Anchors = [akTop, akRight]
             Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1089#1083#1091#1078#1073#1091' Call Events'
             TabOrder = 0
-            OnClick = Button1Click
+            OnClick = btnCallEventsClick
           end
           object TelPort_spin: TSpinEdit
             Left = 177
@@ -511,7 +537,6 @@ object MF: TMF
             Anchors = [akRight, akBottom]
             Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1083#1080#1077#1085#1090#1072
             TabOrder = 4
-            OnClick = TestDb_btnClick
           end
           object Button7: TButton
             Left = 47
@@ -553,6 +578,8 @@ object MF: TMF
             '105'
             '106'
             '107'
+            '301'
+            '401'
             '755'
             '757')
           TabOrder = 0
@@ -603,6 +630,7 @@ object MF: TMF
   end
   object Tel_SRV: TIdHTTPServer
     Bindings = <>
+    OnContextCreated = Tel_SRVContextCreated
     TerminateWaitTime = 30000
     AutoStartSession = True
     OnCommandGet = Tel_SRVCommandGet
@@ -812,5 +840,11 @@ object MF: TMF
     Font.Style = []
     Left = 353
     Top = 215
+  end
+  object CheckTimer: TTimer
+    Interval = 180000
+    OnTimer = CheckTimerTimer
+    Left = 373
+    Top = 81
   end
 end

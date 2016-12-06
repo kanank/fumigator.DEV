@@ -22,47 +22,6 @@ type
     destructor Destroy;
 end;
 
-type TUserRights = class
-  private
-    data: TDataSet;
-    fUserId: Integer;
-    procedure SetUserId(AValue: Integer);
-    procedure GetData;
-    function GetRightById(AIndex: Integer): boolean;
-  public
-    property UserId: integer read fUserId write SetUserId;
-
-    property CreateLogin: boolean         index 1  read GetRightById; // Создание учетных записей
-    property EditDic: boolean             index 2  read GetRightById; // Редактирование справочников
-    property TuneClientList: boolean      index 3  read GetRightById; // Настройка списка клиентов
-    property WorkClientCard: boolean      index 4  read GetRightById; // Работа с карточками клиента
-    property WorkWorkerCard: boolean      index 5  read GetRightById; // Работа с карточками сотрудника
-    property ShowWorkerList: boolean      index 6  read GetRightById; // Просмотр списка сотрудников
-    property ShowClientList: boolean      index 7  read GetRightById; // Просмотр списков клиентов включая и физические и юридические лица
-    property ShowClientCard: boolean      index 8  read GetRightById; // Просмотр карточек клиентов и физических и юридических лиц
-    property ShowWorkerInfoSmall: boolean index 9  read GetRightById; // Просмотр общей информации карточки сотрудника
-    property ShowWorkerInfoFull: boolean  index 10 read GetRightById; // Просмотр полной информации карточки сотрудника
-    property DoCallIncom: boolean         index 11 read GetRightById; // Возможность принять входящий вызов
-    property DoCallOutcome: boolean       index 12 read GetRightById; // Осуществление исходящего вызова
-    property DoTransfer: boolean          index 13 read GetRightById; // Возможность перевести вызов
-    property DoCallEnd: boolean           index 14 read GetRightById; // Возможность закончить вызов
-    property DoCallLater: boolean         index 15 read GetRightById; // Доступность функции «Перезвонить позднее»
-    property ShowSessions: boolean        index 16 read GetRightById; // Просмотр сессий
-    property ShowSessionStat: boolean     index 17 read GetRightById; // Просмотр статистики по сессиям
-    property InputSessionResult: boolean  index 18 read GetRightById; // Ввод информации в окно сессий
-    property AccessSklad: boolean         index 19 read GetRightById; // Работа со «Складом»
-    property MonitorZakaz: boolean        index 20 read GetRightById; // Мониторинг заказов
-    property ShowDogReestr: boolean       index 21 read GetRightById; // Просмотр реестра договоров
-    property WorkDogCard: boolean         index 22 read GetRightById; // Работа с карточками договоров
-    property CreateTask: boolean          index 23 read GetRightById; // Создание задач
-    property TuneSystem: boolean          index 24 read GetRightById; // Настройка системы
-
-    constructor Create(AUserId: Integer = 0); overload;
-    destructor Destroy; overload;
-    procedure Refresh;
-    function Right(ACode: string): Boolean;
-end;
-
 type
   TDataModuleMain = class(TDataModule)
     DB: TIBDatabase;
@@ -167,6 +126,7 @@ type
     procedure ClientListAfterScroll(DataSet: TDataSet);
     procedure ClientsAfterPost(DataSet: TDataSet);
     procedure DBAfterDisconnect(Sender: TObject);
+    procedure ClientListAfterPost(DataSet: TDataSet);
   private
     procedure CreateContactTypesPopup(Adata: TDataset); // создаем попап менютипов клиентов
   public
@@ -189,10 +149,10 @@ type
     function isWorkersRegion(ARegion_Id: integer): Boolean; //регион пользователя или нет
     function isWorkerClient(AClient_id: integer; AWithRegion: boolean=true): boolean; // проверка клиента по сотруднику и региону
 
-    function ShowClientFiz(AAction: TActionStr; AExtPrm: TClientParam): FormResult;
+    function ShowClientFiz(AAction: TActionStr; AExtPrm: TClientParam; ATopMost: Boolean=false): FormResult;
     function ShowClientFizForCall(AAction: TActionStr; AExtPrm: TClientParam): FormResult; // при звонке вместе с краткой формой
 
-    function ShowClientUr(AAction: TActionStr; AExtPrm: TClientParam): FormResult;
+    function ShowClientUr(AAction: TActionStr; AExtPrm: TClientParam; ATopMost: Boolean=false): FormResult;
     function ShowClientUrForCall(AAction: TActionStr; AExtPrm: TClientParam): FormResult;
     function ShowClientsForCall: FormResult;
 
@@ -227,7 +187,7 @@ type
     function isModifiedData(Ds: TIBQuery): Boolean; overload;//проверка наличия изменений
     function isModifiedData(Ds: TDataset): Boolean; overload;
   var
-    CurrentUserSets: CurrentUserRec;
+    CurrentUserSets: TCurrentUser;
     //FtpProp: FtpProps;
     //TrayView: TTrayView;
     MissCount: integer;
@@ -246,7 +206,7 @@ end;
 var
   DM: TDataModuleMain;
   _ClientExtUr: TClientExtUr;
-  UserRights: TUserRights;
+  //UserRights: TUserRights;
 
 
 implementation
@@ -260,7 +220,7 @@ uses
   formClientUr, formIncomeCalls, formIncomeCallsUr, formCalling,
   frmMain, formClientsForCall, formIncomeCallRoot, formSessionResult,
   formClientResult, formContact, formLogo,
-  formSmallClientFiz, formSmallClientUr, formCallEvent;
+  formSmallClientFiz, formSmallClientUr, formCallEvent, CommonFunc;
 
 function SetFieldValue(AField: TField; AValue: Variant; DoPost: Boolean=True): Boolean;
 var
@@ -285,35 +245,7 @@ function CreateRWQuery: TIBQuery;
 var
   TR: TIBTransaction;
 begin
-  TR := TIBTransaction.Create(nil);
-  TR.DefaultDatabase := DM.DB;
-  TR.DefaultAction := TACommit;
-  TR.AutoStopAction := saCommit;
-
-  TR.Params.Add('isc_tpb_read_committed');
-  //TR.Params.Add('isc_tpb_no_rec_version');
-  TR.Params.Add('isc_tpb_rec_version');
-  TR.Params.Add('isc_tpb_wait');
-
-  // Только для чтения
-  //TR.Params.Add('read');
-  //TR.Params.Add('nowait');
-  //TR.Params.Add('rec_version');
-  //TR.Params.Add('read_committed');
-
-  // Для записи
-  //TR.AllowAutoStart := False;
-  //TR.DefaultDatabase := DB;
-  //TR.DefaultAction := TACommit;
-  //TR.Params.Add('write');
-  //TR.Params.Add('nowait');
-  //TR.Params.Add('read_committed');
-  //TR.Params.Add('rec_version');
-
-  result := TIBQuery.Create(nil);
-  result.Database := DM.DB;
-  result.Transaction := TR;
-
+  result := CommonTypes.CreateRWQuery(DM.DB);
 end;
 
 function ClientExtUr(Aid: integer): TClientExtUr;
@@ -326,7 +258,7 @@ begin
 end;
 
 function TDataModuleMain.ShowClientFiz(AAction: TActionStr;
-  AExtPrm: TClientParam): FormResult;
+  AExtPrm: TClientParam; ATopMost: Boolean=false): FormResult;
 var
   prm: TFrmCreateParam;
 begin
@@ -336,6 +268,7 @@ begin
   prm :=  TFrmCreateParam.Init(AACtion, DM.Clients, @AExtPrm);  //NewFrmCreateParam(AACtion, DM.Clients, @AExtPrm);
   frmClientFiz := TfrmClientFiz.Create(nil, '', @prm);
   try
+    frmClientFiz.OnTopMost := ATopMost;
     if frmClientFiz.ShowModal = mrOk then
       DM.Clients.Refresh;
     Result.ModalRes := frmClientFiz.ModalResult;
@@ -369,6 +302,10 @@ begin
     edtPhone.Text          := RightStr(AExtPrm.CallParam.TelNum, 10);
     FrameUslugi.Query      := frmClientFiz.FrameUslugi.Query;
     FrameUslugi.DS.DataSet := frmClientFiz.FrameUslugi.Query;
+    cmbArea.DataBinding.DataSource     := frmClientFiz.DS;
+    cmbAreaUnit.DataBinding.DataSource := frmClientFiz.DS;
+    cmbRegion.DataBinding.DataSource   := frmClientFiz.DS;
+    edtGoods.DataBinding.DataSource    := frmClientFiz.DS;
     ShowModal;
   end;
   Result.ModalRes := frmClientFiz.ModalResult;
@@ -387,7 +324,7 @@ begin
 end;
 
 function TDataModuleMain.ShowClientUr(AAction: TActionStr;
-  AExtPrm: TClientParam): FormResult;
+  AExtPrm: TClientParam; ATopMost: Boolean=false): FormResult;
 var
   prm: TFrmCreateParam;
 begin
@@ -397,6 +334,7 @@ begin
   prm := NewFrmCreateParam(AACtion, DM.Clients, @AExtPrm);
   frmClientUr := TfrmClientUr.Create(nil, '', @prm);
   try
+    frmClientUr.OnTopMost := ATopMost;
     if frmClientUr.ShowModal = mrOk then
       DM.Clients.Refresh;
     Result.ModalRes := frmClientUr.ModalResult;
@@ -430,6 +368,10 @@ begin
     edtPhone.Text          := RightStr(AExtPrm.CallParam.TelNum, 10);
     FrameUslugi.Query      := frmClientUr.FrameUslugi.Query;
     FrameUslugi.DS.DataSet := frmClientUr.FrameUslugi.Query;
+    cmbArea.DataBinding.DataSource     := frmClientFiz.DS;
+    cmbAreaUnit.DataBinding.DataSource := frmClientFiz.DS;
+    cmbRegion.DataBinding.DataSource   := frmClientFiz.DS;
+    edtGoods.DataBinding.DataSource    := frmClientFiz.DS;
     ShowModal;
   end;
   Result.ModalRes := frmClientUr.ModalResult;
@@ -471,21 +413,28 @@ end;
 function TDataModuleMain.ShowFizCallForm(CLP: ClientCallParams): FormResult;
 var
   prm: TClientParam;
+  callPrm: ClientCallParams;
 begin
   DM.GetDataset(DM.Clients);
   DM.Clients.Locate('ID', CallObj.CallInfo.ClientId, []);
 
   if Assigned(frmIncomeCall) then
     frmIncomeCall.CloseAbsolute;
+  prm.Setup;
+  CallPrm.Setup;
+  CallPrm.TelNum      := CallObj.CallInfo.Phone;
+  CallPrm.Client_id   := CallObj.CallInfo.ClientId;
+  CallPrm.Client_Type := CallObj.CallInfo.ClientType;
+  prm.CallParam := @CallPrm;
 
   frmIncomeCall := TfrmIncomeCall.Create(nil);
   try
     frmIncomeCall.CloseOnCancelCall := True;
     frmIncomeCall.edtPhone.Text := RightStr(CallObj.CallInfo.Phone, 10);
-    frmIncomeCall.FramePerson.OpenData(DM.Clients.FieldByName('PERSON_ID').AsInteger);
-    frmIncomeCall.cmbFormat.EditValue := DM.Clients.FieldByName('FORMAT_ID').AsInteger;
-    frmIncomeCall.cmbStatus.EditValue := DM.Clients.FieldByName('STATUS_ID').AsInteger;
-    frmIncomeCall.lblWorker.Caption   := DM.Clients.FieldByName('WORKER_NAME').AsString;
+    frmIncomeCall.FramePerson.OpenData(CallObj.CF('PERSON_ID').AsInteger); //DM.Clients.FieldByName('PERSON_ID').AsInteger);
+    frmIncomeCall.cmbFormat.EditValue := CallObj.CF('FORMAT_ID').AsInteger; //DM.Clients.FieldByName('FORMAT_ID').AsInteger;
+    frmIncomeCall.cmbStatus.EditValue := CallObj.CF('STATUS_ID').AsInteger; //DM.Clients.FieldByName('STATUS_ID').AsInteger;
+    frmIncomeCall.lblWorker.Caption   := CallObj.CF('WORKER_NAME').AsString; //DM.Clients.FieldByName('WORKER_NAME').AsString;
     frmIncomeCall.ShowModal;
     if frmIncomeCall.ModalResult = mrOk then
     begin
@@ -1034,7 +983,6 @@ end;
 function TDataModuleMain.BeforeLogin: boolean;
 var
   answer: integer;
-  DBFileName0: string;
 begin
   {Result := false;
 
@@ -1128,7 +1076,7 @@ begin
    //   Exit;
 
     //inCalling := True;
-    formMain.TCPClient.Socket.WriteLn('#call:' + AtsNumber + ',' + APhone + ',' + AtsNumber);
+    formMain.SocketWriteLn('#call:' + AtsNumber + ',' + APhone + ',' + AtsNumber);
     WaitCalling := true;
     while waitCalling and (cnt < 60) do
     begin
@@ -1180,7 +1128,7 @@ begin
 end;
 
 procedure TDataModuleMain.Calls_TimerTimer(Sender: TObject);
-var Q : TIBQuery;
+var
     ClP :ClientCallParams;
     tel :string;
     id: integer;
@@ -1337,11 +1285,36 @@ begin
   end;
 end;
 
+procedure TDataModuleMain.ClientListAfterPost(DataSet: TDataSet);
+begin
+  if not ClientList0.Active then
+    Exit;
+
+  if ClientList0.Locate('id', DataSet.FieldByName('id').AsInteger, []) then
+  try
+    ClientList0.Edit;
+    CopyRecord(DataSet, ClientList0);
+
+    //ClientList0.FieldByName(Dataset.Fields[i].FieldName).Value := Dataset.Fields[i].Value;
+  finally
+    if ClientList0.State <> dsBrowse then
+      ClientList0.Post;
+  end
+  else
+  try
+    ClientList0.Append;
+    CopyRecord(DataSet, ClientList0);
+  finally
+    if ClientList0.State <> dsBrowse then
+      ClientList0.Post;
+  end
+end;
+
 procedure TDataModuleMain.ClientListAfterScroll(DataSet: TDataSet);
 begin
-  if Clients.FieldByName('id').AsInteger <>
-             ClientList.FieldByName('id').AsInteger then
-    Clients.Locate('id', DataSet.FieldByName('id').AsInteger, []);
+//  if Clients.FieldByName('id').AsInteger <>
+//             ClientList.FieldByName('id').AsInteger then
+ //   Clients.Locate('id', DataSet.FieldByName('id').AsInteger, []);
 end;
 
 procedure TDataModuleMain.ClientsAfterOpen(DataSet: TDataSet);
@@ -1357,7 +1330,7 @@ begin
         ClientList.Locate('id', DataSet.Tag, []);
     end;
   finally
-    ClientList.AfterScroll := ClientListAfterScroll;
+//    ClientList.AfterScroll := ClientListAfterScroll;
     ClientList0.Close;
     ClientList0.CopyFromDataSet(Dataset);
     ClientList0.Open;
@@ -1524,7 +1497,9 @@ begin
   begin
     try
       DB.Open;
-      MsgBoxInformation('Соединение с БД было восстановлено после несанкционированного отключения');
+      ///MsgBoxInformation('Соединение с БД было восстановлено после несанкционированного отключения');
+      PostMessageToAll(WM_CONNECTDB);
+      formMain.TrayBalloon('Фумигатор. Соединение с БД', 'Соединение с БД было восстановлено после несанкционированного отключения', mtInfo);
     Except
       MsgBoxError('Соединение с БД не было восстановлено после несанкционированного отключения!' + #13#10 +
         'Проверьте сетевое подключение');
@@ -1685,6 +1660,9 @@ end;
 
 function TDataModuleMain.isWorkerClient(AClient_id: integer; AWithRegion: boolean=true): boolean;
 begin
+   if AClient_id = 0 then
+     Exit;
+
    if Clients.Locate('id', AClient_id, []) then
    begin
      result := (Clients.FieldByName('worker_id').AsInteger =
@@ -1894,73 +1872,9 @@ begin
   fQuery.Open;
 end;
 
-{ TUserRights }
 
-constructor TUserRights.Create(AUserId: Integer);
-begin
-  inherited Create;
-  fUserId := 0;
-
-  data := TIBQuery.Create(nil);
-  TIBQuery(data).Database := DM.DB;
-  TIBQuery(data).SQL.Add('select * from get_rights_by_user(:user_id)');
-
-  if AUserId > 0  then
-    UserId := AUserId;
-end;
-
-destructor TUserRights.Destroy;
-begin
-  if data.Active then
-    data.Close;
-  FreeAndNil(data);
-end;
-
-procedure TUserRights.GetData;
-begin
-  if fUserId = 0 then
-    Exit;
-
-  try
-    try
-      data.Close;
-      TIBQuery(data).Params[0].AsInteger := fUserId;
-      data.Open;
-    except
-      raise Exception.Create('Ошибка получения прав: ' + Exception(ExceptObject).Message);
-    end;
-  finally
-
-  end;
-end;
-
-function TUserRights.GetRightById(AIndex: Integer): boolean;
-begin
-  if Data.Active then
-    if data.Locate('right_id', AIndex, []) then
-      Result := data.FieldByName('val').AsInteger = 1;
-end;
-
-procedure TUserRights.Refresh;
-begin
-  GetData;
-end;
-
-function TUserRights.Right(ACode: string): Boolean;
-begin
-  if Data.Active then
-    if data.Locate('right_code', ACode, [loCaseInsensitive]) then
-      Result := data.FieldByName('val').AsInteger = 1;
-end;
-
-procedure TUserRights.SetUserId(AValue: Integer);
-begin
-  if fUserId <> AValue then
-  begin
-    fUserId := AValue;
-    if AValue > 0 then
-      GetData;
-  end;
-end;
+initialization
+finalization
+  FreeAndNil(DM.CurrentUserSets);
 
 end.

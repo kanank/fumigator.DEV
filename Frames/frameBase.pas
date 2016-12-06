@@ -189,7 +189,6 @@ function TDbFrameBase.QuerySetParams: Boolean;
 var
   i, ind: Integer;
   prm: TParam;
-  fld: TField;
 begin
   result := false;
   try
